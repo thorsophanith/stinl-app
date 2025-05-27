@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StandardController;
+use App\Models\standard;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
+
+Route::resource('standard', StandardController::class);
+
+Route::post('/standards/{id}/parameters/download', [StandardController::class, 'downloadParametersPdf'])
+    ->name('standard.parameters.download');
+
