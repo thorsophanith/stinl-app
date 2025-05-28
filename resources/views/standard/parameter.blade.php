@@ -12,6 +12,9 @@
 </head>
 <body>
         <h1 class="text-3xl font-bold mb-4">Parameter Page</h1>
+        <a href="{{ route('standard.index') }}" class="text-blue-600 hover:underline mb-4 inline-block">
+            ← Back to Standards
+        </a>
         
 
         <div class="bg-white rounded-lg shadow-md p-8">

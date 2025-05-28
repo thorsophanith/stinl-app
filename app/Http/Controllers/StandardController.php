@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\File;
+use App\Models\parameter; 
 
 class StandardController extends Controller
 {
@@ -33,16 +34,81 @@ class StandardController extends Controller
      */
     public function create()
     {
-        //
+        return view('standard.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'code' => 'required|string|unique:standards,code',
+            'codex' => 'required|string',
+            'name_en' => 'required|string',
+            'name_kh' => 'required|string',
+
+            'parameters' => 'required|array|min:1',
+            'parameters.*.name_en' => 'required|string',
+            'parameters.*.name_kh' => 'required|string',
+            'parameters.*.formular' => 'nullable|string',
+            'parameters.*.criteria_operator' => 'required|string',
+            'parameters.*.criteria_value1' => 'required|numeric',
+            'parameters.*.criteria_value2' => 'nullable|numeric',
+            'parameters.*.unit' => 'required|string',
+            'parameters.*.LOQ' => 'nullable|string',
+            'parameters.*.method' => 'nullable|string',
+        ]);
+
+        // Create standard
+        $standard = standard::create([
+            'code' => $validated['code'],
+            'codex' => $validated['codex'],
+            'name_en' => $validated['name_en'],
+            'name_kh' => $validated['name_kh'],
+        ]);
+
+        $parameterIds = [];
+
+        foreach ($validated['parameters'] as $paramData) {
+            $existing = parameter::where('name_en', $paramData['name_en'])
+                ->where('name_kh', $paramData['name_kh'])
+                ->where('formular', $paramData['formular'] ?? null)
+                ->where('criteria_operator', $paramData['criteria_operator'])
+                ->where('criteria_value1', $paramData['criteria_value1'])
+                ->where('criteria_value2', $paramData['criteria_value2'] ?? null)
+                ->where('unit', $paramData['unit'])
+                ->where('LOQ', $paramData['LOQ'])
+                ->where('method', $paramData['method'])
+                ->first();
+
+            if ($existing) {
+                $parameterIds[] = $existing->id;
+            } else {
+                $new = parameter::create([
+                    'name_en' => $paramData['name_en'],
+                    'name_kh' => $paramData['name_kh'],
+                    'formular' => $paramData['formular'] ?? null,
+                    'criteria_operator' => $paramData['criteria_operator'],
+                    'criteria_value1' => $paramData['criteria_value1'],
+                    'criteria_value2' => $paramData['criteria_value2'] ?? null,
+                    'unit' => $paramData['unit'],
+                    'LOQ' => $paramData['LOQ'],
+                    'method' => $paramData['method'],
+                ]);
+
+                $parameterIds[] = $new->id;
+            }
+        }
+
+        // Attach parameters to the standard
+        $standard->parameters()->sync($parameterIds);
+
+        return redirect()->route('standard.index')->with('success', 'Standard and parameters created successfully.');
     }
+
+    
 
     /**
      * Display the specified resource.

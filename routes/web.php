@@ -24,3 +24,6 @@ Route::resource('standard', StandardController::class);
 Route::post('/standards/{id}/parameters/download', [StandardController::class, 'downloadParametersPdf'])
     ->name('standard.parameters.download');
 
+Route::get('/standard/create', [StandardController::class, 'create'])->name('standard.create');
+Route::post('/standard', [StandardController::class, 'store'])->name('standard.store');
+
