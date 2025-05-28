@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name_en');
             $table->string('name_kh');
-            $table->string('formular');
+            $table->string('formular')->nullable();
             $table->string('criteria_operator');
             $table->float('criteria_value1');
             $table->float('criteria_value2')->nullable();
             $table->string('unit');
-            $table->string('LOQ');
-            $table->string('method');
+            $table->string('LOQ')->nullable();
+            $table->string('method')->nullable();
             $table->timestamps();
         });
     }

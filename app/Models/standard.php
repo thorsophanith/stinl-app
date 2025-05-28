@@ -11,6 +11,14 @@ use App\Models\standard_parameter;
 class standard extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'code',
+        'codex',
+        'name_en',
+        'name_kh',
+    ];
+
     public function parameters(): BelongsToMany
     {
         return $this->belongsToMany(parameter::class, 'standard_parameters');
