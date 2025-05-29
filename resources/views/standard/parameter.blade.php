@@ -1,3 +1,6 @@
+@extends('includes.app')
+@section('content')
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,12 +14,10 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
-        <h1 class="text-3xl font-bold mb-4">Parameter Page</h1>
-        <a href="{{ route('standard.index') }}" class="text-blue-600 hover:underline mb-4 inline-block">
-            ← Back to Standards
-        </a>
-        
-
+    <a href="{{ route('standard.index') }}" class="bg-blue-300 py-1.5 px-3 rounded-md text-blue-600 hover:underline mb-4 inline-block">
+        ← Back home
+    </a>
+        <h1 class="text-xl text-gray-700 font-bold mb-4">Parameter Page / <span>{{ $standard->name_en }}</span></h1>
         <div class="bg-white rounded-lg shadow-md p-8">
             {{-- Table --}}
             <div class="table-container overflow-auto">
@@ -55,18 +56,20 @@
                     </tbody>
                 </table>
             </div>
+            <form method="POST" action="{{ route('standard.parameters.download', $standard->id) }}" class="mt-12 flex justify-end px-16">
+                @csrf
+                <button type="submit"
+                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    ⬇️ Download PDF
+                </button>
+            </form>
         </div>
-
-        <form method="POST" action="{{ route('standard.parameters.download', $standard->id) }}">
-            @csrf
-            <button type="submit"
-                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                ⬇️ Download PDF
-            </button>
-        </form>
 
 </body>
 </html>
+
+
+@endsection
 
 
 
