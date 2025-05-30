@@ -1,35 +1,36 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Parameter</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    </head>
-    <body>
-            <h1 class="text-3xl font-bold mb-4">Parameter Page</h1>
-            <a href="{{ route('standard.index') }}" class="text-blue-600 hover:underline mb-4 inline-block">
-                ← Back to Standards
-            </a>
-            
+@extends('includes.app')
+@section('content')
 
-            @php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parameter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
+<body>
+    <a href="{{ route('standard.index') }}" class="bg-blue-300 py-1.5 px-3 rounded-md text-blue-600 hover:underline mb-4 inline-block">
+        ← Back home
+    </a>
+        <h1 class="text-xl text-gray-700 font-bold mb-4">Parameter Page / <span>{{ $standard->name_en }}</span></h1>
+         @php
             $labTypeLabels = [
                 'Microbiological' => 'ស្តង់ដាមីក្រូជីវសាស្ត្រ',
                 'Chemical' => 'ស្តង់ដាគីមីសាស្ត្រ',
                 'Others' => 'ស្តង់ដារប៉ារ៉ាម៉ែត្រផ្សេទៀត',
                 ];
             @endphp
-
-            @foreach($groupedStandards as $labType => $standards)
-        <div class="bg-white rounded-lg shadow-md p-8 mb-6">
-            <h2 class="text-xl font-semibold mb-4">{{ $labTypeLabels[$labType] ?? $labType }}</h2>
-            
+        @foreach($groupedStandards as $labType => $standards)        
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <h2 class="text-xl font-semibold mb-4">{{ $labTypeLabels[$labType] ?? $labType }}</h2>     
+            {{-- Table --}}          
             <div class="table-container overflow-auto">
+                
                 <table class="min-w-full">
                     <thead class="bg-gray-50">
                         <tr>
@@ -70,14 +71,16 @@
                 </table>
             </div>
         </div>
-
-        <form method="POST" action="{{ route('standard.parameters.download', $standard->id) }}">
-            @csrf
-            <button type="submit"
-                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                ⬇️ Download PDF
-            </button>
-        </form>
+    @endforeach
+            </div>
+            <form method="POST" action="{{ route('standard.parameters.download', $standard->id) }}" class="mt-12 flex justify-end px-16">
+                @csrf
+                <button type="submit"
+                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    ⬇️ Download PDF
+                </button>
+            </form>
+        </div>
 
 </body>
 </html>

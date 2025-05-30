@@ -2,12 +2,46 @@
 @section('content')
 <form action="{{ route('standard.store') }}" method="POST">
     @csrf
-    <!-- Standard fields -->
-    <input type="text" name="code" placeholder="Code" required>
-    <input type="text" name="codex" placeholder="Codex" required>
-    <input type="text" name="name_en" placeholder="Standard Name EN" required>
-    <input type="text" name="name_kh" placeholder="Standard Name KH" required>
+    <a href="{{ route('standard.index') }}" class="bg-blue-300 py-1.5 px-3 rounded-md text-blue-600 hover:underline mb-4 inline-block">
+        ← Back home
+    </a>
+    <h1 class="text-xl text-gray-700 font-bold pb-6">Add Standard</h1>
+    <div>
+        <!-- Standard fields -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
+
+        <div class="space-y-2 lg:px-10">
+            <label class="text-sm text-gray-700 px-1 font-medium" for="">Code</label>
+            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="code" placeholder="Code" required><br>
+        </div>
+
+        <div class="space-y-2 lg:px-10">
+            <label class="text-sm text-gray-700 px-1 font-medium" for="">Codex</label>
+            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="codex" placeholder="Codex" required><br>
+        </div>
+
+        <div class="space-y-2 lg:px-10">
+            <label class="text-sm text-gray-700 px-1 font-medium" for="">Standard Name EN</label>
+            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="name_en" placeholder="Standard Name EN" required><br>
+        </div>
+
+        <div class="space-y-2 lg:px-10">
+            <label class="text-sm text-gray-700 px-1 font-medium" for="">Standard Name KH</label>
+            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="name_kh" placeholder="Standard Name KH" required><br>
+        </div>
+
+        <div class="space-y-2 lg:px-10">
+            <label class="text-sm text-gray-700 px-1 font-medium" for="">Select Lab Type</label>
+            <select class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" name="lab_type" required>
+                <option value="">-- Select Lab Type --</option>
+                <option value="Microbiological">Microbiological</option>
+                <option value="Chemical">Chemical</option>
+                <option value="Others">Others</option>
+            </select>
+        </div>
+
+    </div>
     <div id="parameters-container">
         <!-- Template row -->
         <div class="parameter-row grid grid-cols-1 md:grid-cols-2 gap-4">
