@@ -1,27 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagination Table</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
+@extends('includes.app')
+@section('content')
 
-            <h1 class="text-3xl font-bold mb-4">Standard Page</h1>
-        
-
+    <div class="flex items-center justify-between px-3">
+        <h1 class="text-xl md:text-2xl font-bold mb-4">Standard Page</h1>
+        <a href="{{ route('standard.create') }}" class="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">Add New Standard</a>
+    </div>
         <div class="bg-white rounded-lg shadow-md p-8">
             {{-- Search + per_page --}}
             <form method="GET" action="{{ route('standard.index') }}" class="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
-                <input 
-                    type="text" 
-                    name="search" 
-                    placeholder="Search..." 
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search..."
                     value="{{ request('search') }}"
                     class="w-full sm:w-auto border px-3 py-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 >
@@ -40,21 +30,27 @@
             {{-- Table --}}
             <div class="table-container overflow-auto">
                 <table class="min-w-full">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gray-100 rounded-md">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Codex</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name En</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name Kh</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Code</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Codex</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name En</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name Kh</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse ($standards as $standard)
-                            <tr onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="cursor-pointer hover:bg-gray-100 transition">
+                            <tr onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="cursor-pointer hover:bg-blue-50 ease-out duration-300 transition">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->code }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->codex }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_en }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_kh }}</td>
+                                <td class="py-2 text-gray-700 flex gap-2 justify-center items-center text-sm lg:w-[90px]">
+                                    <a href="" class="max-md:text-xs bg-blue-500 px-2.5 md:px-3 py-[6px]  rounded-lg text-white font-medium hover:bg-blue-600 duration-300 ease-out ">Edit</a>
+                                    <a href="" class="max-md:text-xs bg-red-500 px-2.5 md:px-3 py-[7px] rounded-lg text-white font-medium hover:bg-red-600 duration-300 ease-out ">Delete</a>
+                                    <a href="" class="max-md:text-xs bg-green-500 px-2.5 md:px-3 py-[6px]  rounded-lg text-white font-medium hover:bg-green-600 duration-300 ease-out ">Details</a>
+                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -70,11 +66,6 @@
                 {{ $standards->appends(request()->query())->links() }}
             </div>
         </div>
-    
-        <a href="{{ route('standard.create') }}" class="text-blue-600 hover:underline mb-4 inline-block">
-            Create New Standard
-        </a>
-</body>
-</html>
 
 
+@endsection

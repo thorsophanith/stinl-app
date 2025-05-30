@@ -70,19 +70,20 @@
                 </table>
             </div>
         </div>
-    @endforeach
+
+        <form method="POST" action="{{ route('standard.parameters.download', $standard->id) }}">
+            @csrf
+            <button type="submit"
+                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                ⬇️ Download PDF
+            </button>
+        </form>
+
+</body>
+</html>
 
 
-            <form method="POST" action="{{ route('standard.parameters.download', $standard->id) }}">
-                @csrf
-                <button type="submit"
-                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                    ⬇️ Download PDF
-                </button>
-            </form>
-
-    </body>
-    </html>
+@endsection
 
 
 
