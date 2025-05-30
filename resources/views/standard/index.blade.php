@@ -71,7 +71,9 @@
             </div>
         </div>
     
-        
+        <a href="{{ route('standard.create') }}" class="text-blue-600 hover:underline mb-4 inline-block">
+            Create New Standard
+        </a>
 </body>
 </html>
 

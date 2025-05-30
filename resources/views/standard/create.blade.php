@@ -5,6 +5,13 @@
     <input type="text" name="codex" placeholder="Codex" required>
     <input type="text" name="name_en" placeholder="Standard Name EN" required>
     <input type="text" name="name_kh" placeholder="Standard Name KH" required>
+    <select name="lab_type" required>
+        <option value="">-- Select Lab Type --</option>
+        <option value="Microbiological">Microbiological</option>
+        <option value="Chemical">Chemical</option>
+        <option value="Others">Others</option>
+    </select>
+
 
     <div id="parameters-container">
         <!-- Template row -->

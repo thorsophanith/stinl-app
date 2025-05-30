@@ -8,6 +8,7 @@ use Mpdf\Mpdf;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\File;
 use App\Models\parameter; 
+use Illuminate\Validation\Rule;
 
 class StandardController extends Controller
 {
@@ -16,18 +17,23 @@ class StandardController extends Controller
      */
     public function index(Request $request)
     {
-        $query = standard::query();
+        $perPage = $request->input('per_page', 10);
+
+        $query = Standard::selectRaw('MIN(id) as id, code, codex, name_en, name_kh')
+            ->groupBy('code', 'codex', 'name_en', 'name_kh');
 
         if ($request->has('search')) {
-            $query->where('name_en', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('name_kh', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('code', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('codex', 'like', '%' . $request->input('search') . '%');
+            $search = $request->input('search');
+            $query->havingRaw('name_en LIKE ? OR name_kh LIKE ? OR code LIKE ? OR codex LIKE ?', [
+                "%$search%", "%$search%", "%$search%", "%$search%"
+            ]);
         }
-        $perPage = $request->input('per_page', 10);
+
         $standards = $query->paginate($perPage);
+
         return view('standard.index', compact('standards'));
-    }   
+    }
+  
 
     /**
      * Show the form for creating a new resource.
@@ -44,10 +50,17 @@ class StandardController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'code' => 'required|string|unique:standards,code',
+            'code' => [
+                'required',
+                'string',
+                Rule::unique('standards')->where(function ($query) use ($request) {
+                    return $query->where('lab_type', $request->lab_type);
+                }),
+            ],
             'codex' => 'required|string',
             'name_en' => 'required|string',
             'name_kh' => 'required|string',
+            'lab_type' => 'required|in:Microbiological,Chemical,Others',
 
             'parameters' => 'required|array|min:1',
             'parameters.*.name_en' => 'required|string',
@@ -67,6 +80,7 @@ class StandardController extends Controller
             'codex' => $validated['codex'],
             'name_en' => $validated['name_en'],
             'name_kh' => $validated['name_kh'],
+            'lab_type' => $validated['lab_type'],
         ]);
 
         $parameterIds = [];
@@ -113,11 +127,22 @@ class StandardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(standard $standard)
+    public function show(Standard $standard)
     {
-        $parameters = $standard->parameters()->get();
-        return view('standard.parameter', compact('parameters', 'standard'));
+        $relatedStandards = Standard::where('code', $standard->code)
+            ->where('codex', $standard->codex)
+            ->where('name_en', $standard->name_en)
+            ->where('name_kh', $standard->name_kh)
+            ->with('parameters')
+            ->get()
+            ->groupBy('lab_type');
+
+        return view('standard.parameter', [
+            'standard' => $standard,
+            'groupedStandards' => $relatedStandards
+        ]);
     }
+
 
 
     public function downloadParametersPdf(string $id)
