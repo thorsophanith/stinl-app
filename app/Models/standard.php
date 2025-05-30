@@ -17,7 +17,10 @@ class standard extends Model
         'codex',
         'name_en',
         'name_kh',
+        'lab_type',
     ];
+
+    
 
     public function parameters(): BelongsToMany
     {

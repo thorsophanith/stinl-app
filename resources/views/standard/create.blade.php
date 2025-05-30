@@ -30,6 +30,17 @@
             <label class="text-sm text-gray-700 px-1 font-medium" for="">Standard Name KH</label>
             <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="name_kh" placeholder="Standard Name KH" required><br>
         </div>
+
+        <div class="space-y-2 lg:px-10">
+            <label class="text-sm text-gray-700 px-1 font-medium" for="">Select Lab Type</label>
+            <select class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" name="lab_type" required>
+                <option value="">-- Select Lab Type --</option>
+                <option value="Microbiological">Microbiological</option>
+                <option value="Chemical">Chemical</option>
+                <option value="Others">Others</option>
+            </select>
+        </div>
+
     </div>
     <div id="parameters-container">
         <!-- Template row -->
