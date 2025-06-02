@@ -16,7 +16,11 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+
+            $user = Auth::user();
+            // You can now access $user->name and $user->email if needed for logging, flash messages, etc.
+
+            return redirect()->intended('/standard');
         }
 
         return back()->withErrors(['email' => 'Invalid login credentials.']);

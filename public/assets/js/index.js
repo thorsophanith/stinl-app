@@ -2,12 +2,10 @@
           // profile
 
 
-
           document.addEventListener('DOMContentLoaded', () => {
             const menuButton = document.getElementById('menu-button');
             const dropdownMenu = document.getElementById('profile-dropdown-menu');
             const dropdownContainer = document.getElementById('profile-dropdown-container');
-      
             /**
              * Toggles the visibility of the dropdown menu.
              */
@@ -16,7 +14,6 @@
               menuButton.setAttribute('aria-expanded', !isExpanded);
               dropdownMenu.classList.toggle('hidden'); // Show/hide the dropdown
             };
-      
             /**
              * Handles clicks outside the dropdown to close it.
              *
@@ -29,15 +26,14 @@
                 dropdownMenu.classList.add('hidden');
               }
             };
-      
+
             // Add event listener to the menu button to toggle the dropdown
             menuButton.addEventListener('click', toggleDropdown);
-      
+
             // Add event listener to the document to close the dropdown when clicking outside
             document.addEventListener('mousedown', handleClickOutside);
           });
-      
-      
+
       // Get references to the sidebar, toggle button, menu icon, close icon, and backdrop
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebar-toggle');

@@ -42,7 +42,7 @@
         </div>
 
     </div>
-    <div id="parameters-container">
+    <div id="parameters-container" class="mt-10">
         <!-- Template row -->
         <div class="parameter-row grid grid-cols-1 md:grid-cols-2 gap-4">
 
