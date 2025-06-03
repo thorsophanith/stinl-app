@@ -14,7 +14,7 @@
             @endphp
         @foreach($groupedStandards as $labType => $standards)
         <div class="bg-white rounded-lg shadow-md p-8">
-            <h2 class="text-xl font-sans font-medium mb-4" >{{ $labTypeLabels[$labType] ?? $labType }}</h2>
+            <h2 class="bg-blue-300 py-1.5 px-3 rounded-md text-xl font-sans font-medium mb-4 " >{{ $labTypeLabels[$labType] ?? $labType }}</h2>
             {{-- Table --}}
             <div class="table-container overflow-auto">
 
@@ -22,7 +22,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Name En</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Formular</th>
+                            <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Formular</th> -->
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Method</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Criteria</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Criteria Value</th>
@@ -37,11 +37,11 @@
                                 @php $hasParameters = true; @endphp
                                 <tr class="hover:bg-gray-100 transition">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->name_kh }} ({{ $parameter->name_en }})</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->formular }}</td>
+                                    <!-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->formular }}</td> -->
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->method }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->criteria_operator }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                                        {{ $parameter->criteria_value2 ? $parameter->criteria_value1 . '-' . $parameter->criteria_value2 : $parameter->criteria_value1 }}
+                                        {{ $parameter->criteria_value2 ? $parameter->criteria_value1 . ' - ' . $parameter->criteria_value2 : $parameter->criteria_value1 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->LOQ }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->unit }}</td>
@@ -63,7 +63,7 @@
             <form method="POST" action="{{ route('standard.parameters.download', $standard->id) }}" class="mt-12 flex justify-end px-16">
                 @csrf
                 <button type="submit"
-                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    class="max-md:text-xs bg-green-500 hover:bg-green-600 ring-2 ring-green-300 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">
                     ⬇️ Download PDF
                 </button>
             </form>

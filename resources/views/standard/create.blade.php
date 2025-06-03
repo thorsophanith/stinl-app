@@ -9,8 +9,7 @@
     <div>
         <!-- Standard fields -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-
+    
         <div class="space-y-2 lg:px-10">
             <label class="text-sm text-gray-700 px-1 font-medium" for="">Code</label>
             <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="code" placeholder="Code" required><br>
@@ -46,7 +45,7 @@
         <!-- Template row -->
         <div class="parameter-row grid grid-cols-1 md:grid-cols-2 gap-4">
 
-
+            <div class="parameter-label col-span-full font-semibold text-blue-600 text-lg px-10 pt-5">Parameter 1</div>
             <div class="space-y-2 lg:px-10">
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Param Name EN</label>
                 <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"  type="text" name="parameters[0][name_en]"  placeholder="Param Name EN" required><br>
@@ -69,12 +68,12 @@
 
             <div class="space-y-2 lg:px-10">
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria value1</label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="number" name="parameters[0][criteria_value1]" placeholder="Criteria value1" required><br>
+                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="float" name="parameters[0][criteria_value1]" placeholder="Criteria value1" required><br>
             </div>
 
             <div class="space-y-2 lg:px-10">
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria value2</label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="number" name="parameters[0][criteria_value2]" placeholder="Criteria value2"><br>
+                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="float" name="parameters[0][criteria_value2]" placeholder="Criteria value2"><br>
             </div>
 
             <div class="space-y-2 lg:px-10">
@@ -94,8 +93,9 @@
         </div>
     </div>
     <div class="py-5 flex gap-3 sm:gap-5 sm:px-4 md:px-10">
+    <button type="button" id="remove-parameter" class="max-md:text-xs bg-red-500 hover:bg-red-600 ring-2 ring-red-300 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">Remove Last Parameter</button>
     <button type="button" id="add-parameter" class="max-md:text-xs bg-blue-500 hover:bg-blue-600 ring-2 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">Add Parameter</button>
-    <button type="submit" class="max-md:text-xs bg-blue-500 hover:bg-blue-600 ring-2 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">Create Standard</button>
+    <button type="submit" class="max-md:text-xs bg-green-500 hover:bg-green-600 ring-2 ring-green-300 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">Create Standard</button>
     </div>
 </form>
     </div>
