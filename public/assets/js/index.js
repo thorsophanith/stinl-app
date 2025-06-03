@@ -103,37 +103,49 @@
     //  create
         let counter = 1;
 
-        document.getElementById('add-parameter').addEventListener('click', function () {
-            const container = document.getElementById('parameters-container');
-            const newRow = container.firstElementChild.cloneNode(true);
+function updateRemoveButtonVisibility() {
+    const container = document.getElementById('parameters-container');
+    const rows = container.querySelectorAll('.parameter-row');
+    const removeBtn = document.getElementById('remove-parameter');
+    removeBtn.style.display = rows.length > 1 ? 'inline-block' : 'none';
+}
 
-            newRow.querySelectorAll('input').forEach(input => {
-                const name = input.getAttribute('name');
-                const newName = name.replace(/\[\d+\]/, `[${counter}]`);
-                input.setAttribute('name', newName);
-                input.value = '';
-            });
+// On page load
+updateRemoveButtonVisibility();
 
-            // Update or insert parameter title
-            let header = newRow.querySelector('.parameter-label');
-            if (!header) {
-                header = document.createElement('div');
-                header.className = "parameter-label col-span-full font-semibold text-gray-600 text-lg px-10 pt-5";
-                newRow.prepend(header);
-            }
-            header.textContent = `Parameter ${counter + 1}`;
+document.getElementById('add-parameter').addEventListener('click', function () {
+    const container = document.getElementById('parameters-container');
+    const newRow = container.firstElementChild.cloneNode(true);
 
-            container.appendChild(newRow);
-            counter++;
-        });
+    newRow.querySelectorAll('input').forEach(input => {
+        const name = input.getAttribute('name');
+        const newName = name.replace(/\[\d+\]/, `[${counter}]`);
+        input.setAttribute('name', newName);
+        input.value = '';
+    });
 
-        document.getElementById('remove-parameter').addEventListener('click', function () {
-            const container = document.getElementById('parameters-container');
-            const rows = container.querySelectorAll('.parameter-row');
-            if (rows.length > 1) {
-                container.removeChild(rows[rows.length - 1]);
-                counter--;
-            } else {
-                alert('At least one parameter is required.');
-            }
-        });
+    // Update or insert parameter title
+    let header = newRow.querySelector('.parameter-label');
+    if (!header) {
+        header = document.createElement('div');
+        header.className = "parameter-label col-span-full font-semibold text-gray-600 text-lg px-10 pt-5";
+        newRow.prepend(header);
+    }
+    header.textContent = `Parameter ${counter + 1}`;
+
+    container.appendChild(newRow);
+    counter++;
+
+    updateRemoveButtonVisibility();
+});
+
+document.getElementById('remove-parameter').addEventListener('click', function () {
+    const container = document.getElementById('parameters-container');
+    const rows = container.querySelectorAll('.parameter-row');
+    if (rows.length > 1) {
+        container.removeChild(rows[rows.length - 1]);
+        counter--;
+    }
+    updateRemoveButtonVisibility();
+});
+
