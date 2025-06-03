@@ -1,6 +1,6 @@
 <h2>Reset Password</h2>
 @if($errors->any()) <p style="color:red;">{{ $errors->first() }}</p> @endif
-<form method="POST" action="/reset-password">
+<form method="POST" action="{{ route('password.update') }}">
     @csrf
     <input type="hidden" name="token" value="{{ $token }}">
     <input name="email" type="email" placeholder="Your email"><br>

@@ -18,7 +18,13 @@ class PasswordResetController extends Controller
 
     public function sendResetLink(Request $request) {
         $request->validate(['email' => 'required|email|exists:users,email']);
-
+    
+        $user = User::where('email', $request->email)->first();
+    
+        if (is_null($user->email_verified_at)) {
+            return back()->withErrors(['email' => 'Please verify your email address before resetting your password.']);
+        }
+    
         $token = Str::random(64);
         DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $request->email],
@@ -27,9 +33,10 @@ class PasswordResetController extends Controller
                 'created_at' => Carbon::now()
             ]
         );
-
-        Mail::raw("Reset your password here: " . url("/reset-password/$token"), function($msg) use ($request) {
-            $msg->to($request->email)->subject("Password Reset Link");
+    
+        Mail::send('emails.password-reset', ['token' => $token], function ($message) use ($request) {
+            $message->to($request->email)
+                    ->subject('Reset Your Password');
         });
 
         return back()->with('status', 'Reset link sent!');
@@ -47,20 +54,28 @@ class PasswordResetController extends Controller
         ]);
 
         $tokenData = DB::table('password_reset_tokens')
-                        ->where('email', $request->email)
-                        ->where('token', $request->token)
-                        ->first();
+                ->where('email', $request->email)
+                ->where('token', $request->token)
+                ->first();
 
-        if (!$tokenData) {
-            return back()->withErrors(['email' => 'Invalid token.']);
-        }
+                   if (!$tokenData) {
+                       return back()->withErrors(['email' => 'Invalid token.']);
+                   }
 
-        User::where('email', $request->email)->update([
-            'password' => Hash::make($request->password)
-        ]);
+                   $user = User::where('email', $request->email)->first();
 
-        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+                   if (is_null($user->email_verified_at)) {
+                       return back()->withErrors(['email' => 'Please verify your email address before resetting your password.']);
+                   }
 
-        return redirect('/login')->with('status', 'Password has been reset!');
+                   // Update password
+                   User::where('email', $request->email)->update([
+                       'password' => Hash::make($request->password)
+                   ]);
+
+                   DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+                   return redirect('/login')->with('status', 'Password has been reset!');
+
     }
 }
