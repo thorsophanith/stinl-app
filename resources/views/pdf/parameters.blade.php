@@ -50,8 +50,8 @@
                     <td>{{ $parameter->name_kh }}</td>
                     <td>{{ $parameter->formular }}</td>
                     <td>{{ $parameter->criteria_operator }}</td>
-                    <td>{{ $parameter->criteria_value1 }}</td>
-                    <td>{{ $parameter->criteria_value2 ?? '-' }}</td>
+                    <td class="text-center">{{ $parameter->criteria_value1 }}</td>
+                    <td class="text-center">{{ $parameter->criteria_value2 ?? '-' }}</td>
                     <td>{{ $parameter->LOQ }}</td>
                     <td>{{ $parameter->method }}</td>
                     <td>{{ $parameter->unit }}</td>

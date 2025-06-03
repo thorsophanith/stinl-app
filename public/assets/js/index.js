@@ -2,12 +2,10 @@
           // profile
 
 
-
           document.addEventListener('DOMContentLoaded', () => {
             const menuButton = document.getElementById('menu-button');
             const dropdownMenu = document.getElementById('profile-dropdown-menu');
             const dropdownContainer = document.getElementById('profile-dropdown-container');
-      
             /**
              * Toggles the visibility of the dropdown menu.
              */
@@ -16,7 +14,6 @@
               menuButton.setAttribute('aria-expanded', !isExpanded);
               dropdownMenu.classList.toggle('hidden'); // Show/hide the dropdown
             };
-      
             /**
              * Handles clicks outside the dropdown to close it.
              *
@@ -29,15 +26,14 @@
                 dropdownMenu.classList.add('hidden');
               }
             };
-      
+
             // Add event listener to the menu button to toggle the dropdown
             menuButton.addEventListener('click', toggleDropdown);
-      
+
             // Add event listener to the document to close the dropdown when clicking outside
             document.addEventListener('mousedown', handleClickOutside);
           });
-      
-      
+
       // Get references to the sidebar, toggle button, menu icon, close icon, and backdrop
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebar-toggle');
@@ -105,19 +101,39 @@
         }
 
     //  create
-
         let counter = 1;
-    document.getElementById('add-parameter').addEventListener('click', function () {
-        const container = document.getElementById('parameters-container');
-        const newRow = container.firstElementChild.cloneNode(true);
 
-        newRow.querySelectorAll('input').forEach(input => {
-            const name = input.getAttribute('name');
-            const newName = name.replace(/\[\d+\]/, `[${counter}]`);
-            input.setAttribute('name', newName);
-            input.value = ''; // Clear value
+        document.getElementById('add-parameter').addEventListener('click', function () {
+            const container = document.getElementById('parameters-container');
+            const newRow = container.firstElementChild.cloneNode(true);
+
+            newRow.querySelectorAll('input').forEach(input => {
+                const name = input.getAttribute('name');
+                const newName = name.replace(/\[\d+\]/, `[${counter}]`);
+                input.setAttribute('name', newName);
+                input.value = '';
+            });
+
+            // Update or insert parameter title
+            let header = newRow.querySelector('.parameter-label');
+            if (!header) {
+                header = document.createElement('div');
+                header.className = "parameter-label col-span-full font-semibold text-gray-600 text-lg px-10 pt-5";
+                newRow.prepend(header);
+            }
+            header.textContent = `Parameter ${counter + 1}`;
+
+            container.appendChild(newRow);
+            counter++;
         });
 
-        container.appendChild(newRow);
-        counter++;
-    });
+        document.getElementById('remove-parameter').addEventListener('click', function () {
+            const container = document.getElementById('parameters-container');
+            const rows = container.querySelectorAll('.parameter-row');
+            if (rows.length > 1) {
+                container.removeChild(rows[rows.length - 1]);
+                counter--;
+            } else {
+                alert('At least one parameter is required.');
+            }
+        });

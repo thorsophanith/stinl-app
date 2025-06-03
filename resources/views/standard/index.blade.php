@@ -41,15 +41,21 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse ($standards as $standard)
-                            <tr onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="cursor-pointer hover:bg-blue-50 ease-out duration-300 transition">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->code }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->codex }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_en }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_kh }}</td>
+                            <tr class="cursor-pointer hover:bg-blue-50 ease-out duration-300 transition">
+                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->code }}</td>
+                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->codex }}</td>
+                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_en }}</td>
+                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_kh }}</td>
+
                                 <td class="py-2 text-gray-700 flex gap-2 justify-center items-center text-sm lg:w-[90px]">
-                                    <a href="" class="max-md:text-xs bg-blue-500 px-2.5 md:px-3 py-[6px]  rounded-lg text-white font-medium hover:bg-blue-600 duration-300 ease-out ">Edit</a>
-                                    <a href="" class="max-md:text-xs bg-red-500 px-2.5 md:px-3 py-[7px] rounded-lg text-white font-medium hover:bg-red-600 duration-300 ease-out ">Delete</a>
-                                    <a href="" class="max-md:text-xs bg-green-500 px-2.5 md:px-3 py-[6px]  rounded-lg text-white font-medium hover:bg-green-600 duration-300 ease-out ">Details</a>
+                                    <a href="{{ route('standard.edit', $standard->id) }}" class="max-md:text-xs bg-blue-500 px-2.5 md:px-3 py-[6px]  rounded-lg text-white font-medium hover:bg-blue-600 duration-300 ease-out ">Edit</a>
+                                    <a class="max-md:text-xs bg-red-500 px-2.5 md:px-3 py-[7px] rounded-lg text-white font-medium hover:bg-red-600 duration-300 ease-out ">
+                                        <form action="{{ route('standard.destroy', $standard->id) }}" method="POST"  >
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </a>
                                 </td>
                             </tr>
                         @empty

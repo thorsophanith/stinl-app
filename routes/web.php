@@ -18,17 +18,6 @@ use App\Models\standard;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
-
-Route::resource('standard', StandardController::class);
-
-Route::post('/standards/{id}/parameters/download', [StandardController::class, 'downloadParametersPdf'])
-    ->name('standard.parameters.download');
-
-Route::get('/standard/create', [StandardController::class, 'create'])->name('standard.create');
-Route::post('/standard', [StandardController::class, 'store'])->name('standard.store');
 
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -43,7 +32,25 @@ Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'
 Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
 
-Route::get('/dashboard', function () {
-    return 'You are logged in!';
-})->middleware('auth');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return view('index');
+    });
+
+    Route::resource('standard', StandardController::class);
+
+    Route::post('/standards/{id}/parameters/download', [StandardController::class, 'downloadParametersPdf'])
+    ->name('standard.parameters.download');
+
+    Route::get('/standard/create', [StandardController::class, 'create'])->name('standard.create');
+    Route::post('/standard', [StandardController::class, 'store'])->name('standard.store');
+
+    Route::get('standard/{standard}/edit', [StandardController::class, 'edit'])->name('standard.edit');
+    Route::put('standard/{standard}', [StandardController::class, 'update'])->name('standard.update');
+
+    Route::delete('standards/{standard}', [StandardController::class, 'destroy'])->name('standard.destroy');
+
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});
 
