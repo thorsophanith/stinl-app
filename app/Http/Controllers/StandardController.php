@@ -19,13 +19,13 @@ class StandardController extends Controller
     {
         $perPage = $request->input('per_page', 10);
 
-        $query = Standard::selectRaw('MIN(id) as id, code, codex, name_en, name_kh')
-            ->groupBy('code', 'codex', 'name_en', 'name_kh');
+        $query = Standard::selectRaw('MIN(id) as id, code, cs, codex, name_en, name_kh')
+            ->groupBy('code', 'cs', 'codex', 'name_en', 'name_kh');
 
         if ($request->has('search')) {
             $search = $request->input('search');
-            $query->havingRaw('name_en LIKE ? OR name_kh LIKE ? OR code LIKE ? OR codex LIKE ?', [
-                "%$search%", "%$search%", "%$search%", "%$search%"
+            $query->havingRaw('name_en LIKE ? OR name_kh LIKE ? OR code LIKE ? OR codex LIKE ? OR cs LIKE ?', [
+                "%$search%", "%$search%", "%$search%", "%$search%", "%$search%"
             ]);
         }
 
@@ -57,8 +57,9 @@ class StandardController extends Controller
                     return $query->where('lab_type', $request->lab_type);
                 }),
             ],
-            'codex' => 'required|string',
-            'name_en' => 'required|string',
+            'cs' => 'nullable|string',
+            'codex' => 'nullable|string',
+            'name_en' => 'nullable|string',
             'name_kh' => 'required|string',
             'lab_type' => 'required|in:Microbiological,Chemical,Others',
 
@@ -77,6 +78,7 @@ class StandardController extends Controller
         // Create standard
         $standard = standard::create([
             'code' => $validated['code'],
+            'cs' => $validated['cs'],
             'codex' => $validated['codex'],
             'name_en' => $validated['name_en'],
             'name_kh' => $validated['name_kh'],
@@ -128,6 +130,7 @@ class StandardController extends Controller
     public function show(Standard $standard)
     {
         $relatedStandards = Standard::where('code', $standard->code)
+            ->where('cs', $standard->cs)
             ->where('codex', $standard->codex)
             ->where('name_en', $standard->name_en)
             ->where('name_kh', $standard->name_kh)
