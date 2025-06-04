@@ -9,29 +9,42 @@
     <div>
         <!-- Standard fields -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        
     
         <div class="space-y-2 lg:px-10">
-            <label class="text-sm text-gray-700 px-1 font-medium" for="">Code</label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="code" placeholder="Code" required><br>
+            <label class="text-sm text-gray-700 px-1 font-medium" for="">STD
+                <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
+            </label>
+            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="code" placeholder="***STD" required><br>
+        </div>
+
+        <div class="space-y-2 lg:px-10">
+            <label class="text-sm text-gray-700 px-1 font-medium" for="">CS</label>
+            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="cs" placeholder="CS" ><br>
         </div>
 
         <div class="space-y-2 lg:px-10">
             <label class="text-sm text-gray-700 px-1 font-medium" for="">Codex</label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="codex" placeholder="Codex" required><br>
+            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="codex" placeholder="Codex" ><br>
         </div>
 
         <div class="space-y-2 lg:px-10">
             <label class="text-sm text-gray-700 px-1 font-medium" for="">Standard Name EN</label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="name_en" placeholder="Standard Name EN" required><br>
+            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="name_en" placeholder="Standard Name EN"><br>
         </div>
 
         <div class="space-y-2 lg:px-10">
-            <label class="text-sm text-gray-700 px-1 font-medium" for="">Standard Name KH</label>
+            <label class="text-sm text-gray-700 px-1 font-medium" for="">Standard Name KH
+                <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
+            </label>
             <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="name_kh" placeholder="Standard Name KH" required><br>
         </div>
 
         <div class="space-y-2 lg:px-10">
-            <label class="text-sm text-gray-700 px-1 font-medium" for="">Select Lab Type</label>
+            <label class="text-sm text-gray-700 px-1 font-medium" for="">Select Lab Type
+                <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
+            </label>
             <select class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" name="lab_type" required>
                 <option value="">-- Select Lab Type --</option>
                 <option value="Microbiological">Microbiological</option>
@@ -45,14 +58,18 @@
         <!-- Template row -->
         <div class="parameter-row grid grid-cols-1 md:grid-cols-2 gap-4">
 
-            <div class="parameter-label col-span-full font-semibold text-blue-600 text-lg px-10 pt-5">Parameter 1</div>
+            <div class="parameter-label col-span-full font-bold text-blue-600 text-lg px-10 pt-5">Parameter 1</div>
             <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Param Name EN</label>
+                <label class="text-sm text-gray-700 px-1 font-medium" for="">Param Name EN
+                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
+                </label>
                 <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"  type="text" name="parameters[0][name_en]"  placeholder="Param Name EN" required><br>
             </div>
 
             <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Param Name KH</label>
+                <label class="text-sm text-gray-700 px-1 font-medium" for="">Param Name KH
+                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
+                </label>
                 <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="parameters[0][name_kh]" placeholder="Param Name KH" required><br>
             </div>
 
@@ -62,12 +79,16 @@
             </div>
 
             <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria Operator</label>
+                <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria Operator
+                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
+                </label>
                 <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="parameters[0][criteria_operator]" placeholder="Criteria Operator" required><br>
             </div>
 
             <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria value1</label>
+                <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria value1
+                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
+                </label>
                 <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="float" name="parameters[0][criteria_value1]" placeholder="Criteria value1" required><br>
             </div>
 
@@ -77,7 +98,9 @@
             </div>
 
             <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Unit</label>
+                <label class="text-sm text-gray-700 px-1 font-medium" for="">Unit
+                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
+                </label>
                 <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="parameters[0][unit]" placeholder="Unit" required><br>
             </div>
 
@@ -87,7 +110,9 @@
             </div>
 
             <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Method</label>
+                <label class="text-sm text-gray-700 px-1 font-medium" for="">Method 
+                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
+                </label>
                 <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="parameters[0][method]" placeholder="Method"><br>
             </div>
         </div>

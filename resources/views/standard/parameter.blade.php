@@ -4,7 +4,7 @@
 <a href="{{ route('standard.index') }}" class="bg-blue-300 py-1.5 px-3 rounded-md text-blue-600 hover:underline mb-4 inline-block">
         ← Back home
     </a>
-        <h1 class="text-xl text-gray-700 font-bold mb-4">Parameter Page / <span>{{ $standard->name_en }}</span></h1>
+        <h1 class="text-xl text-gray-700 font-bold mb-4">Parameter Page / <span class="text-xl text-gray-700 font-semibold">{{ $standard->code }} {{ $standard->name_kh }}</span></h1>
          @php
             $labTypeLabels = [
                 'Microbiological' => 'ស្តង់ដាមីក្រូជីវសាស្ត្រ',
@@ -36,14 +36,14 @@
                             @foreach($standard->parameters as $parameter)
                                 @php $hasParameters = true; @endphp
                                 <tr class="hover:bg-gray-100 transition">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->name_kh }} ({{ $parameter->name_en }})</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->name_kh }} ({{ $parameter->name_en ?? '--'}})</td>
                                     <!-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->formular }}</td> -->
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->method }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->method ?? '--'}}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->criteria_operator }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
                                         {{ $parameter->criteria_value2 ? $parameter->criteria_value1 . ' - ' . $parameter->criteria_value2 : $parameter->criteria_value1 }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->LOQ }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->LOQ ?? '--' }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->unit }}</td>
                                 </tr>
                             @endforeach

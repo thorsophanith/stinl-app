@@ -32,7 +32,8 @@
                 <table class="min-w-full">
                     <thead class="bg-gray-100 rounded-md">
                         <tr>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Code</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">STD</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">CS</th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Codex</th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name En</th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name Kh</th>
@@ -42,9 +43,10 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse ($standards as $standard)
                             <tr class="cursor-pointer hover:bg-blue-50 ease-out duration-300 transition">
-                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->code }}</td>
-                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->codex }}</td>
-                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_en }}</td>
+                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->code ?? '--' }}</td>
+                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->cs ?? '--' }}</td>
+                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->codex ?? '--' }}</td>
+                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_en ?? '--' }}</td>
                                 <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_kh }}</td>
 
                                 <td class="py-2 text-gray-700 flex gap-2 justify-center items-center text-sm lg:w-[90px]">
