@@ -101,7 +101,7 @@
         }
 
     //  create
-        let counter = 1;
+        let counter = document.querySelectorAll('.parameter-row').length;
 
 function updateRemoveButtonVisibility() {
     const container = document.getElementById('parameters-container');
