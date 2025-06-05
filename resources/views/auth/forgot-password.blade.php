@@ -1,8 +1,13 @@
-@extends('includes.app')
+@extends('includes.auth')
 
 @section('content')
-<div class="max-w-lg m-auto flex items-center justify-center shadow-xl rounded-lg bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 mb-[20vh] mt-10">
+<div class="max-w-lg m-auto flex items-center justify-center shadow-xl rounded-lg bg-white py-12 px-4 sm:px-6 lg:px-8 mb-[20vh] mt-10">
   <div class="max-w-md w-full space-y-8">
+
+    <div class="flex justify-center mb-2">
+      <img src="https://verify.stinl.gov.kh/Images/stinl_logo.png" alt="" width="120" height="118" class="shadow-2xl shadow-[#646ac48a] hover:animate-none duration-1000 scale-95 rounded-full">
+    </div>
+
     <div>
       <h2 class="mt-6 text-center text-2xl md:text-3xl font-extrabold text-gray-900">Forgot Password</h2>
     </div>
