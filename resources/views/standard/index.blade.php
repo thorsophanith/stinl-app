@@ -50,14 +50,13 @@
                                 <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_kh }}</td>
 
                                 <td class="py-2 text-gray-700 flex gap-2 justify-center items-center text-sm lg:w-[90px]">
-                                    <a href="{{ route('standard.edit', $standard->id) }}" class="max-md:text-xs bg-blue-500 px-2.5 md:px-3 py-[6px]  rounded-lg text-white font-medium hover:bg-blue-600 duration-300 ease-out ">Edit</a>
-                                    <a class="max-md:text-xs bg-red-500 px-2.5 md:px-3 py-[7px] rounded-lg text-white font-medium hover:bg-red-600 duration-300 ease-out ">
-                                        <form action="{{ route('standard.destroy', $standard->id) }}" method="POST"  >
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
-                                    </a>
+                                    <a href="{{ route('standard.edit', $standard->id) }}" class="max-md:text-xs bg-blue-500 px-2.5 md:px-3 py-[6px] rounded-lg text-white font-medium hover:bg-blue-600 duration-300 ease-out">Edit</a>
+
+                                    <form method="POST" action="{{ route('standard.destroy', $standard->id) }}" class="inline delete-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" onclick="showDeleteDialog(this.form)" class="max-md:text-xs bg-red-500 px-2.5 md:px-3 py-[7px] rounded-lg text-white font-medium hover:bg-red-600 duration-300 ease-out">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
@@ -74,6 +73,36 @@
                 {{ $standards->appends(request()->query())->links() }}
             </div>
         </div>
+
+        <div id="deleteDialog" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-gray-800 relative">
+        <h2 class="text-lg font-semibold mb-2">🗑️ Confirm Deletion</h2>
+        <p class="text-sm text-red-600 mb-4">Are you sure you want to delete this item? This action cannot be undone.</p>
+        <div class="flex justify-end gap-3">
+            <button onclick="cancelDelete()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+            <button onclick="confirmDelete()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let formToSubmit = null;
+
+    function showDeleteDialog(form) {
+        formToSubmit = form;
+        document.getElementById('deleteDialog').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelDelete() {
+        formToSubmit = null;
+        document.getElementById('deleteDialog').classList.add('hidden');
+    }
+
+    function confirmDelete() {
+        if (formToSubmit) formToSubmit.submit();
+    }
+</script>
 
 
 @endsection
