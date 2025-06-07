@@ -1,9 +1,24 @@
 /* Custom styles for the Inter font */
 body {
-  font-family: "Khmer", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+  font-family: 'Khmer OS', 'Khmer OS Siemreap', 'Khmer OS Muol Light', 'Moul', 'Hanuman', sans-serif;
 }
+
+@font-face {
+  font-family: 'KhmerOS';
+  src: url('fonts/KhmerOS.ttf') format('truetype');
+}
+.khmer-text {
+  font-family: 'KhmerOS', sans-serif;
+}
+
+.ring1{
+  box-shadow: rgba(0, 0, 0, 0.139) 0px 1px 4px 4px;
+}
+
+.sha1{
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.437);
+}
+
 /* Custom scrollbar for main content area */
 .custom-scrollbar::-webkit-scrollbar {
     width: 8px;

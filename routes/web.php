@@ -46,6 +46,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/standard/create', [StandardController::class, 'create'])->name('standard.create');
     Route::post('/standard', [StandardController::class, 'store'])->name('standard.store');
 
+
+    Route::get('standard/{standard}/edit', [StandardController::class, 'edit'])
+    ->name('standard.edit.multi');
+
+    Route::put('standard/update', [StandardController::class, 'update'])
+    ->name('standard.update.multi');
+
     Route::get('standard/{standard}/edit', [StandardController::class, 'edit'])->name('standard.edit');
     Route::put('standard/{standard}', [StandardController::class, 'update'])->name('standard.update');
 

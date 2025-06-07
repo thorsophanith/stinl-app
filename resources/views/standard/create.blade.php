@@ -10,8 +10,6 @@
         <!-- Standard fields -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        
-    
         <div class="space-y-2 lg:px-10">
             <label class="text-sm text-gray-700 px-1 font-medium" for="">STD
                 <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
