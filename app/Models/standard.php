@@ -15,6 +15,7 @@ class standard extends Model
     protected $fillable = [
         'code',
         'codex',
+        'cs',
         'name_en',
         'name_kh',
         'lab_type',
