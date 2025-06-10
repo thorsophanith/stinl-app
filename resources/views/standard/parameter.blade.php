@@ -7,14 +7,14 @@
         <h1 class="text-xl text-gray-700 font-bold mb-4">Parameter Page / <span class="text-xl text-gray-700 font-semibold">{{ $standard->code }} {{ $standard->name_kh }}</span></h1>
          @php
             $labTypeLabels = [
-                'Microbiological' => 'ស្តង់ដាមីក្រូជីវសាស្ត្រ',
-                'Chemical' => 'ស្តង់ដាគីមីសាស្ត្រ',
-                'Others' => 'ស្តង់ដារប៉ារ៉ាម៉ែត្រផ្សេទៀត',
+                'Microbiological' => 'មីក្រូជីវសាស្ត្រ',
+                'Chemical' => 'គីមីសាស្ត្រ',
+                'Others' => 'ប៉ារ៉ាម៉ែត្រផ្សេទៀត',
                 ];
             @endphp
         @foreach($groupedStandards as $labType => $standards)
         <div class="bg-white rounded-lg shadow-md p-8">
-            <h2 class="bg-blue-300 py-1.5 px-3 rounded-md text-xl font-sans font-medium mb-4 " >{{ $labTypeLabels[$labType] ?? $labType }}</h2>
+            <h2 class="bg-blue-300 py-1.5 px-3 rounded-md text-xl mb-4 " >{{ $labTypeLabels[$labType] ?? $labType }}</h2>
             {{-- Table --}}
             <div class="table-container overflow-auto">
 

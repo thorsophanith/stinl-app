@@ -2,21 +2,21 @@
 <html>
 <head>
     <title>Standard Parameters</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Khmer&display=swap" rel="stylesheet">
     <style>
 
-        @font-face {
-        font-family: 'NotoSansKhmer';
-        src: url('{{ base_path('resources/fonts/NotoSansKhmer-Regular.ttf') }}') format('truetype');
-        font-weight: normal;
-        }
-
         body {
-            font-family: 'NotoSansKhmer', sans-serif;
+            font-family: "Khmer", sans-serif;
+            font-weight: 400;
+            font-style: normal;
         }
 
         table, th, td {
-            font-family: 'NotoSansKhmer', sans-serif;
-            font-size: 12pt;
+            font-family: "Khmer", sans-serif;
+            font-weight: 400;
+            font-style: normal;
         }
         table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #000; padding: 6px; font-size: 12px; }

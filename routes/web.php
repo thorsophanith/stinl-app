@@ -32,19 +32,22 @@ Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'
 Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
 
-
 Route::middleware('auth')->group(function () {
+
     Route::get('/', function () {
-        return view('index');
-    });
+            return view('index');
+        });
+
+    Route::get('/standard/create', [StandardController::class, 'create'])->name('standard.create');
+    Route::post('/standard', [StandardController::class, 'store'])->name('standard.store');
+    
 
     Route::resource('standard', StandardController::class);
 
     Route::post('/standards/{id}/parameters/download', [StandardController::class, 'downloadParametersPdf'])
     ->name('standard.parameters.download');
 
-    Route::get('/standard/create', [StandardController::class, 'create'])->name('standard.create');
-    Route::post('/standard', [StandardController::class, 'store'])->name('standard.store');
+    
 
     Route::get('standard/{standard}/edit', [StandardController::class, 'edit'])->name('standard.edit');
     Route::put('standard/{standard}', [StandardController::class, 'update'])->name('standard.update');
