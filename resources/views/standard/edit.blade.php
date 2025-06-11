@@ -15,6 +15,18 @@
     </div>
 @endif
 
+@if (session('removed'))
+    <div class="alert alert-warning">
+        {{ session('removed') }}
+    </div>
+@endif
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 
 <a href="{{ route('standard.index') }}" class="bg-blue-300 py-1.5 px-3 rounded-md text-blue-600 hover:underline mb-4 inline-block">
     ← Back home

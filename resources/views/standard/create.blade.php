@@ -1,177 +1,116 @@
 @extends('includes.app')
+
 @section('content')
-<form action="{{ route('standard.store') }}" method="POST">
-    @csrf
-    <a href="{{ route('standard.index') }}" class="bg-blue-300 py-1.5 px-3 rounded-md text-blue-600 hover:underline mb-4 inline-block">
-        ← Back home
-    </a>
-    <h1 class="text-xl text-gray-700 font-bold pb-6">Add Standard</h1>
-    <div>
-        <!-- Standard fields -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <div class="space-y-2 lg:px-10">
-            <label class="text-sm text-gray-700 px-1 font-medium" for="">STD
-                <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
-            </label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                type="text" name="code" placeholder="***STD" value="{{ old('code') }}" required><br>
-        </div>
-
-        <div class="space-y-2 lg:px-10">
-            <label class="text-sm text-gray-700 px-1 font-medium" for="">CS</label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-            type="text" name="cs" placeholder="CS" value="{{ old('cs') }}" ><br>
-        </div>
-
-        <div class="space-y-2 lg:px-10">
-            <label class="text-sm text-gray-700 px-1 font-medium" for="">Codex</label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-            type="text" name="codex" placeholder="Codex" value="{{ old('codex') }}" ><br>
-        </div>
-
-        <div class="space-y-2 lg:px-10">
-            <label class="text-sm text-gray-700 px-1 font-medium" for="">Standard Name EN</label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-            type="text" name="name_en" placeholder="Standard Name EN" value="{{ old('name_en') }}"><br>
-        </div>
-
-        <div class="space-y-2 lg:px-10">
-            <label class="text-sm text-gray-700 px-1 font-medium" for="">Standard Name KH
-                <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
-            </label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-            type="text" name="name_kh" placeholder="Standard Name KH" value="{{ old('name_kh') }}" required><br>
-        </div>
-
-        <div class="space-y-2 lg:px-10">
-            <label class="text-sm text-gray-700 px-1 font-medium" for="">Select Lab Type
-                <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
-            </label>
-            <select class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" name="lab_type" required>
-                <option value="">-- Select Lab Type --</option>
-                <option value="Microbiological">Microbiological</option>
-                <option value="Chemical">Chemical</option>
-                <option value="Others">Others</option>
-            </select>
-        </div>
-
-    </div>
-    <div id="parameters-container" class="mt-10">
-        <!-- Template row -->
-        @php
-            $oldParams = old('parameters', [[]]);
-        @endphp
-
-        @foreach ($oldParams as $index => $param)
-        <div class="parameter-row grid grid-cols-1 md:grid-cols-2 gap-4">
-
-            <div class="parameter-label col-span-full font-bold text-blue-600 text-lg px-10 pt-5">Parameter {{ $index + 1 }}</div>
-            <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Param Name EN
-                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
-                </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"  
-                    type="text" name="parameters[{{ $index }}][name_en]" value="{{ $param['name_en'] ?? '' }}"  placeholder="Param Name EN" required><br>
-            </div>
-
-            <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Param Name KH
-                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
-                </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                    type="text" name="parameters[{{ $index }}][name_kh]" value="{{ $param['name_kh'] ?? '' }}" placeholder="Param Name KH" required><br>
-            </div>
-
-            <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Formular</label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                    type="text" name="parameters[{{ $index }}][formular]" value="{{ $param['formular'] ?? '' }}" placeholder="Formular"><br>
-            </div>
-
-            <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria Operator
-                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
-                </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                    type="text" name="parameters[{{ $index }}][criteria_operator]" value="{{ $param['criteria_operator'] ?? '' }}" placeholder="Criteria Operator" required><br>
-            </div>
-
-            <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria value1
-                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
-                </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                    type="float" name="parameters[{{ $index }}][criteria_value1]" value="{{ $param['criteria_value1'] ?? '' }}" placeholder="Criteria value1" required><br>
-            </div>
-
-            <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria value2</label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                    type="float" name="parameters[{{ $index }}][criteria_value2]" value="{{ $param['criteria_value2'] ?? '' }}" placeholder="Criteria value2"><br>
-            </div>
-
-            <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Unit
-                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
-                </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                    type="text" name="parameters[{{ $index }}][unit]" value="{{ $param['unit'] ?? '' }}" placeholder="Unit" required><br>
-            </div>
-
-            <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">LOQ</label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                    type="text" name="parameters[{{ $index }}][LOQ]" value="{{ $param['LOQ'] ?? '' }}" placeholder="LOQ"><br>
-            </div>
-
-            <div class="space-y-2 lg:px-10">
-                <label class="text-sm text-gray-700 px-1 font-medium" for="">Method 
-                    <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
-                </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                    type="text" name="parameters[{{ $index }}][method]" value="{{ $param['method'] ?? '' }}" placeholder="Method"><br>
-            </div>
-        </div>
-        @endforeach
-    </div>
-    <div class="py-5 flex gap-3 sm:gap-5 sm:px-4 md:px-10">
-    <button type="button" id="remove-parameter" class="max-md:text-xs bg-red-500 hover:bg-red-600 ring-2 ring-red-300 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">Remove Last Parameter</button>
-    <button type="button" id="add-parameter" class="max-md:text-xs bg-blue-500 hover:bg-blue-600 ring-2 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">Add Parameter</button>
-    <button type="submit" class="max-md:text-xs bg-green-500 hover:bg-green-600 ring-2 ring-green-300 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">Create Standard</button>
-    </div>
-</form>
-    </div>
-    <!-- Error Modal -->
-@if ($errors->any())
-    <script>
-        window.addEventListener('load', () => {
-            document.getElementById('errorDialog').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    </script>
-
-    <div id="errorDialog" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-gray-800 relative">
-            <h2 class="text-lg font-semibold mb-2">⚠️ Submission Alert</h2>
-            <ul class="list-disc list-inside text-sm text-red-600 mb-4 max-h-48 overflow-y-auto pr-2">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-            <div class="flex justify-end gap-3">
-                <button onclick="closeErrorDialog()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Stay and Edit</button>
-                <a href="{{ url()->previous() }}" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Leave</a>
-            </div>
-        </div>
+@if (session('success'))
+    <div class="mb-4 px-4 py-3 text-green-800 bg-green-100 border border-green-300 rounded-md">
+        {{ session('success') }}
     </div>
 @endif
 
-<script>
-    function closeErrorDialog() {
-        document.getElementById('errorDialog').classList.add('hidden');
-    }
-</script>
+@if (session('error'))
+    <div class="mb-4 px-4 py-3 text-red-800 bg-red-100 border border-red-300 rounded-md">
+        {{ session('error') }}
+    </div>
+@endif
 
+<a href="{{ route('standard.index') }}" class="bg-blue-300 py-1.5 px-3 rounded-md text-blue-600 hover:underline mb-4 inline-block">
+    ← Back home
+</a>
 
+<div class="container">
+    <h1 class="text-lg text-gray-700 font-medium mb-2 py-3">Create New Standards</h1>
+
+    <div class="flex mb-4 border-b border-gray-200">
+        <button class="filter-tab py-2 px-4 font-medium text-sm rounded-t-lg mr-1 bg-gray-100 text-gray-700" data-filter="all">All Standards</button>
+        <button class="filter-tab py-2 px-4 font-medium text-sm rounded-t-lg mr-1 bg-gray-100 text-gray-700" data-filter="Microbiological">{{ $labTypeTranslations['Microbiological'] ?? 'Microbiological' }}</button>
+        <button class="filter-tab py-2 px-4 font-medium text-sm rounded-t-lg mr-1 bg-gray-100 text-gray-700" data-filter="Chemical">{{ $labTypeTranslations['Chemical'] ?? 'Chemical' }}</button>
+    </div>
+
+    <form method="POST" action="{{ route('standard.store') }}">
+        @csrf
+
+        @foreach(['Microbiological', 'Chemical'] as $labType)
+            <div class="standard-section card mb-4 px-1 md:px-5" data-lab-type="{{ $labType }}">
+                <div class="card-header mt-10 mb-10 bg-blue-300 py-3 ring-2 ring-blue-200 px-5 rounded-md text-xl font-medium mb-4 bg-{{ $labType === 'Microbiological' ? 'info' : ($labType === 'Chemical' ? 'warning' : 'purple') }}">
+                    <h3>{{ $labTypeTranslations[$labType] ?? $labType }}</h3>
+                </div>
+                <div class="card-body space-y-5">
+                    <input type="hidden" name="standards[{{ $labType }}][lab_type]" value="{{ $labType }}">
+
+                    <div class="mb-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="space-y-2">
+                            <label class="form-label text-sm text-gray-700 px-1 font-medium">Code*</label>
+                            <input type="text" class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out"
+                                   name="standards[{{ $labType }}][code]"
+                                   value="{{ old("standards.$labType.code") }}" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="form-label text-sm text-gray-700 px-1 font-medium">CS</label>
+                            <input type="text" class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out"
+                                   name="standards[{{ $labType }}][cs]"
+                                   value="{{ old("standards.$labType.cs") }}">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="form-label text-sm text-gray-700 px-1 font-medium">CODEX</label>
+                            <input type="text" class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out"
+                                   name="standards[{{ $labType }}][codex]"
+                                   value="{{ old("standards.$labType.codex") }}">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="form-label text-sm text-gray-700 px-1 font-medium">Name (English)</label>
+                            <input type="text" class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out"
+                                   name="standards[{{ $labType }}][name_en]"
+                                   value="{{ old("standards.$labType.name_en") }}">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="form-label text-sm text-gray-700 px-1 font-medium">Name (Khmer)*</label>
+                            <input type="text" class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out"
+                                   name="standards[{{ $labType }}][name_kh]"
+                                   value="{{ old("standards.$labType.name_kh") }}" required>
+                        </div>
+                    </div>
+
+                    <div class="parameters-container" id="parameters-container-{{ $labType }}">
+                        {{-- Initial parameter field --}}
+                        <div class="parameter-group mb-3 p-3 border rounded">
+                            <div class="parameter-label col-span-full font-bold text-blue-600 text-lg md:text-xl py-3 sha1">Parameter 1</div>
+                            @include('standard.parameter-fields-multi', [
+                                'labType' => $labType,
+                                'index' => 0,
+                                'parameter' => null
+                            ])
+                        </div>
+                    </div>
+
+                    <div class="pb-3 pt-5">
+                        <button type="button" class="btn ml-2 btn-sm btn-primary add-parameter max-md:text-xs bg-blue-500 hover:bg-blue-600 ring-2 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md" data-lab-type="{{ $labType }}">
+                            Add Parameter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        <div class="flex justify-end px-2 mb-3 -mt-[55.8px] md:-mt-[64px]">
+            <button type="submit" class="btn btn-primary ml-2 max-md:text-xs bg-green-500 hover:bg-green-600 ring-2 ring-green-300 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">Create Standards</button>
+        </div>
+    </form>
+</div>
+
+{{-- This template will be cloned for new parameters --}}
+<div id="parameter-template" style="display: none;">
+    @include('standard.parameter-fields-multi', [
+        'labType' => 'TEMPLATE_LAB_TYPE',
+        'index' => 'TEMPLATE_INDEX',
+        'parameter' => null
+    ])
+</div>
 @endsection
+
+{{-- <script>
+
+</script> --}}

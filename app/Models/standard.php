@@ -14,13 +14,15 @@ class standard extends Model
 
     protected $fillable = [
         'code',
+        'cs',
         'codex',
         'name_en',
         'name_kh',
         'lab_type',
     ];
-
-    
+    protected $casts = [
+        'cs' => 'string', // Ensures 'cs' is always treated as a string
+    ];
 
     public function parameters(): BelongsToMany
     {

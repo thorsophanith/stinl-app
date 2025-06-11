@@ -13,12 +13,24 @@
         {{ session('error') }}
     </div>
 @endif
+
+
+@if (session('removed'))
+    <div class="alert alert-warning mb-4 px-4 py-3 text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-md">
+        {{ session('removed') }}
+    </div>
+@endif
+
+@if (session('success'))
+@endif
+
+
     <div class="flex items-center justify-between px-3">
         <h1 class="text-xl md:text-2xl font-bold mb-4">Standard Page</h1>
         <a href="{{ route('standard.create') }}" class="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">Add New Standard</a>
     </div>
         <div class="bg-white rounded-lg shadow-md p-8">
-          
+
             <form method="GET" action="{{ route('standard.index') }}" class="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
                 <input
                     type="text"
