@@ -16,6 +16,7 @@ class standard extends Model
         'code',
         'cs',
         'codex',
+        'cs',
         'name_en',
         'name_kh',
         'lab_type',

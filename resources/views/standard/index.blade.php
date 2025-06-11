@@ -99,5 +99,35 @@
             </div>
         </div>
 
+        <div id="deleteDialog" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-gray-800 relative">
+        <h2 class="text-lg font-semibold mb-2">🗑️ Confirm Deletion</h2>
+        <p class="text-sm text-red-600 mb-4">Are you sure you want to delete this item? This action cannot be undone.</p>
+        <div class="flex justify-end gap-3">
+            <button onclick="cancelDelete()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+            <button onclick="confirmDelete()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let formToSubmit = null;
+
+    function showDeleteDialog(form) {
+        formToSubmit = form;
+        document.getElementById('deleteDialog').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelDelete() {
+        formToSubmit = null;
+        document.getElementById('deleteDialog').classList.add('hidden');
+    }
+
+    function confirmDelete() {
+        if (formToSubmit) formToSubmit.submit();
+    }
+</script>
+
 
 @endsection
