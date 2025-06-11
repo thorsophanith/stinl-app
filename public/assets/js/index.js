@@ -1,5 +1,78 @@
 
-          // profile
+
+// {{-- Use @push('scripts') and @stack('scripts') for scripts --}}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab filtering logic
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const standardSections = document.querySelectorAll('.standard-section');
+
+    // Default to showing all and activate the "All Standards" tab
+    const defaultTab = document.querySelector('.filter-tab[data-filter="all"]');
+    if (defaultTab) {
+        defaultTab.classList.add('bg-blue-500', 'text-white');
+        defaultTab.classList.remove('bg-gray-100', 'text-gray-700');
+    }
+
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            filterTabs.forEach(t => {
+                t.classList.remove('bg-blue-500', 'text-white');
+                t.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            this.classList.add('bg-blue-500', 'text-white');
+            this.classList.remove('bg-gray-100', 'text-gray-700');
+
+            standardSections.forEach(section => {
+                section.style.display = (filter === 'all' || section.dataset.labType === filter) ? 'block' : 'none';
+            });
+        });
+    });
+
+    // Add parameter button logic
+    document.querySelectorAll('.add-parameter').forEach(button => {
+        button.addEventListener('click', function() {
+            const labType = this.dataset.labType;
+            // Find the closest standard-section and then its parameters-container
+            const container = this.closest('.standard-section').querySelector('.parameters-container');
+            const template = document.getElementById('parameter-template').innerHTML;
+            const index = Date.now(); // Use a timestamp for a unique index
+
+            const html = template
+                .replace(/TEMPLATE_LAB_TYPE/g, labType)
+                .replace(/TEMPLATE_INDEX/g, index)
+                .replace(/\[parameters\]\[TEMPLATE_INDEX\]/g, `[parameters][${index}]`) // Correctly replace parameter array index
+                .replace(/standards\[TEMPLATE_LAB_TYPE\]\[parameters\]/g, `standards[${labType}][parameters]`);
+
+
+            const div = document.createElement('div');
+            div.className = 'parameter-group mb-3 p-3 border rounded';
+            div.innerHTML = html;
+            container.appendChild(div);
+
+            // Attach event listener to the new remove button
+            div.querySelector('.remove-parameter')?.addEventListener('click', function() {
+                this.closest('.parameter-group')?.remove();
+            });
+        });
+    });
+
+    // Initial setup for existing remove parameter buttons
+    document.querySelectorAll('.remove-parameter').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.parameter-group')?.remove();
+        });
+    });
+});
+
+
+
+
+
+
+         // profile
 
 
           document.addEventListener('DOMContentLoaded', () => {
@@ -148,4 +221,3 @@ document.getElementById('remove-parameter').addEventListener('click', function (
     }
     updateRemoveButtonVisibility();
 });
-
