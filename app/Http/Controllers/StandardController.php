@@ -38,14 +38,98 @@ class StandardController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-{
-    $labTypeTranslations = [
-        'Microbiological' => 'ស្តង់ដាមីក្រូជីវសាស្ត្រ',
-        'Chemical' => 'ស្តង់ដាគីមីសាស្ត្រ'
-    ];
+    {
+        $labTypeTranslations = [
+            'Microbiological' => 'ស្តង់ដាមីក្រូជីវសាស្ត្រ',
+            'Chemical' => 'ស្តង់ដាគីមីសាស្ត្រ',
+            'Others' => 'ប៉ារ៉ាម៉ែត្រផ្សេទៀតដែលមានចែង'
+        ];
 
-    return view('standard.create', compact('labTypeTranslations'));
+        return view('standard.create', compact('labTypeTranslations'));
+    }
+
+    public function createOne()
+{
+    return view('standard.createOne');
 }
+
+
+    public function storeOne(Request $request)
+    {
+        $validated = $request->validate([
+            'code' => [
+                'required',
+                'string',
+                Rule::unique('standards')->where(function ($query) use ($request) {
+                    return $query->where('lab_type', $request->lab_type);
+                }),
+            ],
+            'cs' => 'nullable|string',
+            'codex' => 'nullable|string',
+            'name_en' => 'nullable|string',
+            'name_kh' => 'required|string',
+            'lab_type' => 'required|in:Microbiological,Chemical,Others',
+
+            'parameters' => 'required|array|min:1',
+            'parameters.*.name_en' => 'required|string',
+            'parameters.*.name_kh' => 'required|string',
+            'parameters.*.formular' => 'nullable|string',
+            'parameters.*.criteria_operator' => 'required|string',
+            'parameters.*.criteria_value1' => 'required|numeric',
+            'parameters.*.criteria_value2' => 'nullable|numeric',
+            'parameters.*.unit' => 'required|string',
+            'parameters.*.LOQ' => 'nullable|string',
+            'parameters.*.method' => 'nullable|string',
+        ]);
+
+        // Create standard
+        $standard = standard::create([
+            'code' => $validated['code'],
+            'cs' => $validated['cs'],
+            'codex' => $validated['codex'],
+            'name_en' => $validated['name_en'],
+            'name_kh' => $validated['name_kh'],
+            'lab_type' => $validated['lab_type'],
+        ]);
+
+        $parameterIds = [];
+
+        foreach ($validated['parameters'] as $paramData) {
+            $existing = parameter::where('name_en', $paramData['name_en'])
+                ->where('name_kh', $paramData['name_kh'])
+                ->where('formular', $paramData['formular'] ?? null)
+                ->where('criteria_operator', $paramData['criteria_operator'])
+                ->where('criteria_value1', $paramData['criteria_value1'])
+                ->where('criteria_value2', $paramData['criteria_value2'] ?? null)
+                ->where('unit', $paramData['unit'])
+                ->where('LOQ', $paramData['LOQ'])
+                ->where('method', $paramData['method'])
+                ->first();
+
+            if ($existing) {
+                $parameterIds[] = $existing->id;
+            } else {
+                $new = parameter::create([
+                    'name_en' => $paramData['name_en'],
+                    'name_kh' => $paramData['name_kh'],
+                    'formular' => $paramData['formular'] ?? null,
+                    'criteria_operator' => $paramData['criteria_operator'],
+                    'criteria_value1' => $paramData['criteria_value1'],
+                    'criteria_value2' => $paramData['criteria_value2'] ?? null,
+                    'unit' => $paramData['unit'],
+                    'LOQ' => $paramData['LOQ'],
+                    'method' => $paramData['method'],
+                ]);
+
+                $parameterIds[] = $new->id;
+            }
+        }
+
+        // Attach parameters to the standard
+        $standard->parameters()->sync($parameterIds);
+
+        return redirect()->route('standard.index')->with('success', 'Standard and parameters created successfully.');
+    }
 
 
 
@@ -58,7 +142,7 @@ class StandardController extends Controller
             'standards.*.codex' => 'nullable|string',
             'standards.*.name_en' => 'nullable|string',
             'standards.*.name_kh' => 'required|string',
-            'standards.*.lab_type' => 'required|in:Microbiological,Chemical',
+            'standards.*.lab_type' => 'required|in:Microbiological,Chemical,Others',
     
             'standards.*.parameters' => 'required|array|min:1',
             'standards.*.parameters.*.name_en' => 'required|string',

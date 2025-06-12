@@ -32,6 +32,9 @@ Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'
 Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
 
+Route::get('/standard/createOne', [StandardController::class, 'createOne'])->name('standard.createOne');
+Route::post('/standard/storeOne', [StandardController::class, 'storeOne'])->name('standard.storeOne');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
@@ -45,7 +48,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/standard/create', [StandardController::class, 'create'])->name('standard.create');
     Route::post('/standard', [StandardController::class, 'store'])->name('standard.store');
-
+    
 
     Route::get('standard/{standard}/edit', [StandardController::class, 'edit'])
     ->name('standard.edit.multi');
