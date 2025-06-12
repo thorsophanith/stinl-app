@@ -1,5 +1,4 @@
 @extends('includes.app')
-
 @section('content')
 
 @if (session('success'))
@@ -25,14 +24,17 @@
         <button class="filter-tab py-2 px-4 font-medium text-sm rounded-t-lg mr-1 bg-gray-100 text-gray-700" data-filter="all">All Standards</button>
         <button class="filter-tab py-2 px-4 font-medium text-sm rounded-t-lg mr-1 bg-gray-100 text-gray-700" data-filter="Microbiological">{{ $labTypeTranslations['Microbiological'] ?? 'Microbiological' }}</button>
         <button class="filter-tab py-2 px-4 font-medium text-sm rounded-t-lg mr-1 bg-gray-100 text-gray-700" data-filter="Chemical">{{ $labTypeTranslations['Chemical'] ?? 'Chemical' }}</button>
+        <button class="filter-tab py-2 px-4 font-medium text-sm rounded-t-lg mr-1 bg-gray-100 text-gray-700" data-filter="Others">
+            {{ $labTypeTranslations['Others'] ?? 'Others' }}
+        </button>
     </div>
 
     <form method="POST" action="{{ route('standard.store') }}">
         @csrf
 
-        @foreach(['Microbiological', 'Chemical'] as $labType)
+        @foreach(['Microbiological', 'Chemical', 'Others'] as $labType)
             <div class="standard-section card mb-4 px-1 md:px-5" data-lab-type="{{ $labType }}">
-                <div class="card-header mt-10 mb-10 bg-blue-300 py-3 ring-2 ring-blue-200 px-5 rounded-md text-xl font-medium mb-4 bg-{{ $labType === 'Microbiological' ? 'info' : ($labType === 'Chemical' ? 'warning' : 'purple') }}">
+                <div class="card-header mt-10 mb-10 bg-blue-300 py-3 ring-2 ring-blue-200 px-5 rounded-md text-xl font-medium mb-4 bg-{{ $labType === 'Microbiological' ? 'blue' : ($labType === 'Chemical' ? 'yellow' : 'purple') }}-300">
                     <h3>{{ $labTypeTranslations[$labType] ?? $labType }}</h3>
                 </div>
                 <div class="card-body space-y-5">
@@ -111,6 +113,32 @@
 </div>
 @endsection
 
-{{-- <script>
+@if ($errors->any())
+    <script>
+        window.addEventListener('load', () => {
+            document.getElementById('errorDialog').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
 
-</script> --}}
+    <div id="errorDialog" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-gray-800 relative">
+            <h2 class="text-lg font-semibold mb-2">⚠️ Submission Alert</h2>
+            <ul class="list-disc list-inside text-sm text-red-600 mb-4 max-h-48 overflow-y-auto pr-2">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeErrorDialog()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Stay and Edit</button>
+                <a href="{{ url()->previous() }}" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Leave</a>
+            </div>
+        </div>
+    </div>
+@endif
+
+<script>
+function closeErrorDialog() {
+        document.getElementById('errorDialog').classList.add('hidden');
+    }
+</script>

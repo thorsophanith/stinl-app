@@ -1,4 +1,5 @@
 @extends('includes.app')
+@section('title', 'Standard Page')
 @section('content')
 
 
@@ -27,7 +28,12 @@
 
     <div class="flex items-center justify-between px-3">
         <h1 class="text-xl md:text-2xl font-bold mb-4">Standard Page</h1>
-        <a href="{{ route('standard.create') }}" class="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">Add New Standard</a>
+        <div class="flex flex-col">
+            <a href="{{ route('standard.createOne') }}" class="px-4 py-1.5 bg-green-500 hover:bg-green-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">Add One Standard</a>
+            <a href="{{ route('standard.create') }}" class="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">Add New Standards</a>
+
+        </div>
+        
     </div>
         <div class="bg-white rounded-lg shadow-md p-8">
 
@@ -57,10 +63,9 @@
                     <thead class="bg-gray-100 rounded-md">
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">STD</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">CS</th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Codex</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name En</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name Kh</th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
@@ -68,10 +73,10 @@
                         @forelse ($standards as $standard)
                             <tr class="cursor-pointer hover:bg-blue-50 ease-out duration-300 transition">
                                 <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->code ?? '--' }}</td>
+                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_kh }} ({{ $standard->name_en ?? '--' }})</td>
                                 <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->cs ?? '--' }}</td>
                                 <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->codex ?? '--' }}</td>
-                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_en ?? '--' }}</td>
-                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_kh }}</td>
+                                
 
                                 <td class="py-2 text-gray-700 flex gap-2 justify-center items-center text-sm lg:w-[90px]">
                                     <a href="{{ route('standard.edit', $standard->id) }}" class="max-md:text-xs bg-blue-500 px-2.5 md:px-3 py-[6px]  rounded-lg text-white font-medium hover:bg-blue-600 duration-300 ease-out ">Edit</a>
@@ -79,7 +84,7 @@
                                         <form action="{{ route('standard.destroy', $standard->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                            <button type="button" onclick="showDeleteDialog(this.form)" class="btn btn-danger">Delete</button>
                                         </form>
                                     </a>
                                 </td>
@@ -127,6 +132,7 @@
     function confirmDelete() {
         if (formToSubmit) formToSubmit.submit();
     }
+
 </script>
 
 
