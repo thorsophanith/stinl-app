@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('cs')->nullable();
             $table->string('codex')->nullable();
             $table->string('name_en')->nullable();
-            $table->string('name_kh');
+        $table->string('name_kh')->nullable();
             $table->enum('lab_type', ['Microbiological', 'Chemical', 'Others']);
             $table->timestamps();
             

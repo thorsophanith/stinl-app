@@ -137,21 +137,21 @@ class StandardController extends Controller
     {
         $validated = $request->validate([
             'standards' => 'required|array|min:1',
-            'standards.*.code' => 'required|string',
+            'standards.*.code' => 'nullable|string',
             'standards.*.cs' => 'nullable|string',
             'standards.*.codex' => 'nullable|string',
             'standards.*.name_en' => 'nullable|string',
-            'standards.*.name_kh' => 'required|string',
+            'standards.*.name_kh' => 'nullable|string',
             'standards.*.lab_type' => 'required|in:Microbiological,Chemical,Others',
     
             'standards.*.parameters' => 'required|array|min:1',
-            'standards.*.parameters.*.name_en' => 'required|string',
-            'standards.*.parameters.*.name_kh' => 'required|string',
+            'standards.*.parameters.*.name_en' => 'nullable|string',
+            'standards.*.parameters.*.name_kh' => 'nullable|string',
             'standards.*.parameters.*.formular' => 'nullable|string',
-            'standards.*.parameters.*.criteria_operator' => 'required|string',
-            'standards.*.parameters.*.criteria_value1' => 'required|numeric',
+            'standards.*.parameters.*.criteria_operator' => 'nullable|string',
+            'standards.*.parameters.*.criteria_value1' => 'nullable|numeric',
             'standards.*.parameters.*.criteria_value2' => 'nullable|numeric',
-            'standards.*.parameters.*.unit' => 'required|string',
+            'standards.*.parameters.*.unit' => 'nullable|string',
             'standards.*.parameters.*.LOQ' => 'nullable|string',
             'standards.*.parameters.*.method' => 'nullable|string',
         ]);

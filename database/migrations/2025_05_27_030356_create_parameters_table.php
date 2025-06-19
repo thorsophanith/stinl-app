@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
-            $table->string('name_en');
-            $table->string('name_kh');
+            $table->string('name_en')->nullable();
+            $table->string('name_kh')->nullable();
             $table->string('formular')->nullable();
-            $table->string('criteria_operator');
-            $table->float('criteria_value1');
+            $table->string('criteria_operator')->nullable();
+            $table->float('criteria_value1')->nullable();
             $table->float('criteria_value2')->nullable();
-            $table->string('unit');
+            $table->string('unit')->nullable();
             $table->string('LOQ')->nullable();
             $table->string('method')->nullable();
             $table->timestamps();
