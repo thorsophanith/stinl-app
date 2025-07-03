@@ -13,15 +13,8 @@ class parameter extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name_en',
-        'name_kh',
-        'formular',
-        'criteria_operator',
-        'criteria_value1',
-        'criteria_value2',
-        'unit',
-        'LOQ',
-        'method',
+        'name_en', 'name_kh', 'formular', 'criteria_operator',
+        'criteria_value1', 'criteria_value2', 'unit', 'LOQ', 'method'
     ];
 
     public function standards(): BelongsToMany

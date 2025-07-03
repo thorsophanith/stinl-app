@@ -1,6 +1,6 @@
 @extends('includes.app')
 @section('content')
- 
+
 <a href="{{ route('standard.index') }}" class="bg-blue-300 py-1.5 px-3 rounded-md text-blue-600 hover:underline mb-4 inline-block">
         ← Back home
     </a>
@@ -29,19 +29,19 @@
 
         @foreach($groupedStandards as $labType => $standards)
         <div class="bg-white rounded-lg shadow-md p-8">
-            <h2 class="bg-blue-300 py-1.5 px-3 rounded-md text-xl font-sans font-medium mb-4 " >{{ $labTypeLabels[$labType] ?? $labType }}</h2>
+            <h2 class="card-header mt-10 mb-10 bg-blue-600 text-white py-3 ring-2 ring-blue-400 px-5 rounded-md font-medium pb-3" >{{ $labTypeLabels[$labType] ?? $labType }}</h2>
             {{-- Table --}}
             <div class="table-container overflow-auto">
 
                 <table class="min-w-full">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Name En</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Method</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Criteria</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Criteria Value</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">LOQ</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Unit</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name En</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Criteria</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Criteria Value</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LOQ</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -50,23 +50,37 @@
                             @foreach($standard->parameters as $parameter)
                                 @php $hasParameters = true; @endphp
                                 <tr class="hover:bg-gray-100 transition">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {!! $parameter->name_kh !!} ({!! $parameter->name_en ? formatChemicalFormula($parameter->name_en) : '--' !!})
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->method ?? '--'}}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->criteria_operator }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                                        {{ $parameter->criteria_value2 ? $parameter->criteria_value1 . ' - ' . $parameter->criteria_value2 : $parameter->criteria_value1 }}
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $parameter->method ?? '--'}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $parameter->criteria_operator }}</td>
+                                    {{-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {!! $parameter->criteria_value2 ? $parameter->criteria_value1 . ' - ' . $parameter->criteria_value2 : $parameter->criteria_value1 !!}
+                                    </td> --}}
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        @php
+                                            $criteriaValues = [];
+                                            for ($i = 1; $i <= 5; $i++) {
+                                                $value = $parameter->{'criteria_value'.$i} ?? null;
+                                                if (!empty($value)) {
+                                                    $criteriaValues[] = $value;
+                                                }
+                                            }
+                                            echo count($criteriaValues) > 1 
+                                                ? implode(' - ', $criteriaValues)
+                                                : $criteriaValues[0] ?? '';
+                                        @endphp
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->LOQ ?? '--' }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">{{ $parameter->unit }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $parameter->LOQ ?? '--' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $parameter->unit }}</td>
                                 </tr>
                             @endforeach
                         @endforeach
 
                         @unless($hasParameters)
                             <tr>
-                                <td colspan="7" class="px-6 py-4 text-center text-gray-500">No parameters found for this lab type.</td>
+                                <td colspan="7" class="px-6 py-4 text-gray-500">No parameters found for this lab type.</td>
                             </tr>
                         @endunless
                     </tbody>

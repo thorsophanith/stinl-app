@@ -34,7 +34,6 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
-
      /* profile */
 
 
@@ -48,11 +47,10 @@ body {
           transform: translateY(0);
         }
       }
-  
+
       .animate-fade-in {
         animation: fade-in 0.2s ease-out forwards;
       }
-
 
       /* width */
 ::-webkit-scrollbar {
@@ -62,15 +60,34 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
+}
+
+
+
+/* Define Inter font and apply to body */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Override Tailwind's default button styles slightly if needed, or add more custom styles */
+.toolbar button {
+    /* Tailwind classes cover most styling, adding specific hover/focus if needed */
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.content-area:focus {
+    outline: none; /* Remove default blue focus outline */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Custom focus ring */
 }

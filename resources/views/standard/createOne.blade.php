@@ -1,6 +1,6 @@
 @extends('includes.app')
 @section('content')
-<form action="{{ route('standard.storeOne') }}" method="POST">
+<form action="{{ route('standard.store') }}" method="POST">
     @csrf
     <a href="{{ route('standard.index') }}" class="bg-blue-300 py-1.5 px-3 rounded-md text-blue-600 hover:underline mb-4 inline-block">
         ← Back home
@@ -16,25 +16,25 @@
             <label class="text-sm text-gray-700 px-1 font-medium" for="">STD
                 <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
             </label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+            <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
                 type="text" name="code" placeholder="***STD" value="{{ old('code') }}" required><br>
         </div>
 
         <div class="space-y-2 lg:px-10">
             <label class="text-sm text-gray-700 px-1 font-medium" for="">CS</label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+            <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
             type="text" name="cs" placeholder="CS" value="{{ old('cs') }}" ><br>
         </div>
 
         <div class="space-y-2 lg:px-10">
             <label class="text-sm text-gray-700 px-1 font-medium" for="">Codex</label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+            <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
             type="text" name="codex" placeholder="Codex" value="{{ old('codex') }}" ><br>
         </div>
 
         <div class="space-y-2 lg:px-10">
             <label class="text-sm text-gray-700 px-1 font-medium" for="">Standard Name EN</label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+            <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
             type="text" name="name_en" placeholder="Standard Name EN" value="{{ old('name_en') }}"><br>
         </div>
 
@@ -42,7 +42,7 @@
             <label class="text-sm text-gray-700 px-1 font-medium" for="">Standard Name KH
                 <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
             </label>
-            <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+            <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
             type="text" name="name_kh" placeholder="Standard Name KH" value="{{ old('name_kh') }}" required><br>
         </div>
 
@@ -50,7 +50,7 @@
             <label class="text-sm text-gray-700 px-1 font-medium" for="">Select Lab Type
                 <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
             </label>
-            <select class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" name="lab_type" required>
+            <select class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" name="lab_type" required>
                 <option value="">-- Select Lab Type --</option>
                 <option value="Microbiological">Microbiological</option>
                 <option value="Chemical">Chemical</option>
@@ -73,7 +73,7 @@
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Param Name EN
                     <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
                 </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"  
+                <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out"  
                     type="text" name="parameters[{{ $index }}][name_en]" value="{{ $param['name_en'] ?? '' }}"  placeholder="Param Name EN" required><br>
             </div>
 
@@ -81,13 +81,13 @@
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Param Name KH
                     <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
                 </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
                     type="text" name="parameters[{{ $index }}][name_kh]" value="{{ $param['name_kh'] ?? '' }}" placeholder="Param Name KH" required><br>
             </div>
 
             <div class="space-y-2 lg:px-10">
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Formular</label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
                     type="text" name="parameters[{{ $index }}][formular]" value="{{ $param['formular'] ?? '' }}" placeholder="Formular"><br>
             </div>
 
@@ -95,7 +95,7 @@
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria Operator
                     <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
                 </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
                     type="text" name="parameters[{{ $index }}][criteria_operator]" value="{{ $param['criteria_operator'] ?? '' }}" placeholder="Criteria Operator" required><br>
             </div>
 
@@ -103,13 +103,13 @@
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria value1
                     <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
                 </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
                     type="float" name="parameters[{{ $index }}][criteria_value1]" value="{{ $param['criteria_value1'] ?? '' }}" placeholder="Criteria value1" required><br>
             </div>
 
             <div class="space-y-2 lg:px-10">
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Criteria value2</label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
                     type="float" name="parameters[{{ $index }}][criteria_value2]" value="{{ $param['criteria_value2'] ?? '' }}" placeholder="Criteria value2"><br>
             </div>
 
@@ -117,13 +117,13 @@
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Unit
                     <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
                 </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
                     type="text" name="parameters[{{ $index }}][unit]" value="{{ $param['unit'] ?? '' }}" placeholder="Unit" required><br>
             </div>
 
             <div class="space-y-2 lg:px-10">
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">LOQ</label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
                     type="text" name="parameters[{{ $index }}][LOQ]" value="{{ $param['LOQ'] ?? '' }}" placeholder="LOQ"><br>
             </div>
 
@@ -131,7 +131,7 @@
                 <label class="text-sm text-gray-700 px-1 font-medium" for="">Method 
                     <span class="bg-blue-300 text-white text-xs px-1 rounded-md italic">Required</span>
                 </label>
-                <input class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                <input class="leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:font-medium dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
                     type="text" name="parameters[{{ $index }}][method]" value="{{ $param['method'] ?? '' }}" placeholder="Method"><br>
             </div>
         </div>

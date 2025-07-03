@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\File;
-use App\Models\parameter; 
+use App\Models\parameter;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class StandardController extends Controller
@@ -17,35 +18,73 @@ class StandardController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 10);
+        // Get monthly standards data with dynamic year range
+        $monthlyStandards = Standard::select(
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('YEAR(created_at) as year'),
+            DB::raw('COUNT(*) as count')
+        )
+        ->whereBetween('created_at', [now()->subYear(), now()]) // Last 12 months
+        ->groupBy('year', 'month')
+        ->orderBy('year', 'asc')
+        ->orderBy('month', 'asc')
+        ->get()
+        ->mapWithKeys(function ($item) {
+            $monthName = date('M Y', mktime(0, 0, 0, $item->month, 1, $item->year));
+            return [$monthName => $item->count];
+        })
+        ->toArray();
+        // Fill in missing months with 0 counts
+        $completeMonthlyData = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $month = now()->subMonths($i)->format('M Y');
+            $completeMonthlyData[$month] = $monthlyStandards[$month] ?? 0;
+        }
 
+        // Get standards by type with percentages
+        $labTypes = ['Microbiological', 'Chemical', 'Others'];
+        $counts = Standard::select('lab_type', DB::raw('count(*) as total'))
+            ->groupBy('lab_type')
+            ->pluck('total', 'lab_type');
+
+        $totalAll = Standard::count();
+        $percentages = [];
+        $knownTotal = 0;
+
+        foreach ($labTypes as $type) {
+            $count = $counts->get($type, 0);
+            $percent = $totalAll > 0 ? round(($count / $totalAll) * 100, 1) : 0;
+            $percentages[$type] = $percent;
+            $knownTotal += $count;
+        }
+    
+        // Other standards data
+        $otherCount = $totalAll - $knownTotal;
+        $otherPercent = $totalAll > 0 ? round(($otherCount / $totalAll) * 100, 1) : 0;
+    
+        // Paginated standards
+        $perPage = $request->input('per_page', 10);
         $query = Standard::selectRaw('MIN(id) as id, code, cs, codex, name_en, name_kh')
             ->groupBy('code', 'cs', 'codex', 'name_en', 'name_kh');
-
+    
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->havingRaw('name_en LIKE ? OR name_kh LIKE ? OR code LIKE ? OR codex LIKE ? OR cs LIKE ?', [
                 "%$search%", "%$search%", "%$search%", "%$search%", "%$search%"
             ]);
         }
-
+    
         $standards = $query->paginate($perPage);
-
-        return view('standard.index', compact('standards'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $labTypeTranslations = [
-            'Microbiological' => 'ស្តង់ដាមីក្រូជីវសាស្ត្រ',
-            'Chemical' => 'ស្តង់ដាគីមីសាស្ត្រ',
-            'Others' => 'ប៉ារ៉ាម៉ែត្រផ្សេទៀតដែលមានចែង'
-        ];
-
-        return view('standard.create', compact('labTypeTranslations'));
+    
+        return view('standard.index', [
+            'monthlyStandards' => $completeMonthlyData,
+            'standards' => $standards,
+            'labTypes' => $labTypes,
+            'counts' => $counts,
+            'percentages' => $percentages,
+            'totalAll' => $totalAll,
+            'totalPercentage' => array_sum($percentages) + $otherPercent
+        ]);
     }
 
     public function createOne()
@@ -53,146 +92,129 @@ class StandardController extends Controller
     return view('standard.createOne');
 }
 
+public function create()
+{
+    $parameters = Parameter::all();
+    $labTypeTranslations = [
+        'Microbiological' => 'Microbiological',
+        'Chemical' => 'Chemical',
+        'Others' => 'Others'
+    ];
+    return view('standard.create', compact('labTypeTranslations'));
+}
 
-    public function storeOne(Request $request)
-    {
-        $validated = $request->validate([
-            'code' => [
-                'required',
-                'string',
-                Rule::unique('standards')->where(function ($query) use ($request) {
-                    return $query->where('lab_type', $request->lab_type);
-                }),
-            ],
-            'cs' => 'nullable|string',
-            'codex' => 'nullable|string',
-            'name_en' => 'nullable|string',
-            'name_kh' => 'required|string',
-            'lab_type' => 'required|in:Microbiological,Chemical,Others',
 
-            'parameters' => 'required|array|min:1',
-            'parameters.*.name_en' => 'required|string',
-            'parameters.*.name_kh' => 'required|string',
-            'parameters.*.formular' => 'nullable|string',
-            'parameters.*.criteria_operator' => 'required|string',
-            'parameters.*.criteria_value1' => 'required|numeric',
-            'parameters.*.criteria_value2' => 'nullable|numeric',
-            'parameters.*.unit' => 'required|string',
-            'parameters.*.LOQ' => 'nullable|string',
-            'parameters.*.method' => 'nullable|string',
-        ]);
+public function storeOne(Request $request)
+{
+    $validated = $request->validate([
+        'code' => 'required|string',
+        'cs' => 'nullable|string',
+        'codex' => 'nullable|string',
+        'name_en' => 'nullable|string',
+        'name_kh' => 'nullable|string',
 
-        // Create standard
-        $standard = standard::create([
+        'standards' => 'required|array|min:1',
+        'standards.*.lab_type' => 'nullable|in:Microbiological,Chemical,Others',
+        'standards.*.parameters' => 'nullable|array|min:1',
+        'standards.*.parameters.*.name_en' => 'nullable|string',
+        'standards.*.parameters.*.name_kh' => 'nullable|string',
+        'standards.*.parameters.*.formular' => 'nullable|string',
+        'standards.*.parameters.*.criteria_operator' => 'nullable|string',
+        'standards.*.parameters.*.criteria_value1' => 'nullable|string|max:50', // <- changed
+        'standards.*.parameters.*.criteria_value2' => 'nullable|string',
+        'standards.*.parameters.*.unit' => 'nullable|string',
+        'standards.*.parameters.*.LOQ' => 'nullable|string',
+        'standards.*.parameters.*.method' => 'nullable|string',
+    ]);
+
+    foreach ($validated['standards'] as $labData) {
+        $standard = Standard::create([
             'code' => $validated['code'],
             'cs' => $validated['cs'],
             'codex' => $validated['codex'],
             'name_en' => $validated['name_en'],
             'name_kh' => $validated['name_kh'],
-            'lab_type' => $validated['lab_type'],
+            'lab_type' => $labData['lab_type'],
         ]);
 
         $parameterIds = [];
 
-        foreach ($validated['parameters'] as $paramData) {
-            $existing = parameter::where('name_en', $paramData['name_en'])
+        foreach ($labData['parameters'] as $paramData) {
+            $existing = Parameter::where('name_en', $paramData['name_en'])
                 ->where('name_kh', $paramData['name_kh'])
                 ->where('formular', $paramData['formular'] ?? null)
                 ->where('criteria_operator', $paramData['criteria_operator'])
-                ->where('criteria_value1', $paramData['criteria_value1'])
+                ->where('criteria_value1', $paramData['criteria_value1'] ?? null)
                 ->where('criteria_value2', $paramData['criteria_value2'] ?? null)
                 ->where('unit', $paramData['unit'])
                 ->where('LOQ', $paramData['LOQ'])
                 ->where('method', $paramData['method'])
                 ->first();
 
-            if ($existing) {
-                $parameterIds[] = $existing->id;
-            } else {
-                $new = parameter::create([
-                    'name_en' => $paramData['name_en'],
-                    'name_kh' => $paramData['name_kh'],
-                    'formular' => $paramData['formular'] ?? null,
-                    'criteria_operator' => $paramData['criteria_operator'],
-                    'criteria_value1' => $paramData['criteria_value1'],
-                    'criteria_value2' => $paramData['criteria_value2'] ?? null,
-                    'unit' => $paramData['unit'],
-                    'LOQ' => $paramData['LOQ'],
-                    'method' => $paramData['method'],
-                ]);
-
-                $parameterIds[] = $new->id;
-            }
+            $parameterIds[] = $existing ? $existing->id : Parameter::create($paramData)->id;
         }
 
-        // Attach parameters to the standard
         $standard->parameters()->sync($parameterIds);
-
-        return redirect()->route('standard.index')->with('success', 'Standard and parameters created successfully.');
     }
 
+    return redirect()->route('standard.index')->with('success', 'Standard with all lab types created successfully.');
+}
 
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'standards' => 'required|array|min:1',
-            'standards.*.code' => 'required|string',
-            'standards.*.cs' => 'nullable|string',
-            'standards.*.codex' => 'nullable|string',
-            'standards.*.name_en' => 'nullable|string',
-            'standards.*.name_kh' => 'required|string',
-            'standards.*.lab_type' => 'required|in:Microbiological,Chemical,Others',
-    
-            'standards.*.parameters' => 'required|array|min:1',
-            'standards.*.parameters.*.name_en' => 'required|string',
-            'standards.*.parameters.*.name_kh' => 'required|string',
-            'standards.*.parameters.*.formular' => 'nullable|string',
-            'standards.*.parameters.*.criteria_operator' => 'required|string',
-            'standards.*.parameters.*.criteria_value1' => 'required|numeric',
-            'standards.*.parameters.*.criteria_value2' => 'nullable|numeric',
-            'standards.*.parameters.*.unit' => 'required|string',
-            'standards.*.parameters.*.LOQ' => 'nullable|string',
-            'standards.*.parameters.*.method' => 'nullable|string',
-        ]);
-    
-        foreach ($validated['standards'] as $stdData) {
-            $standard = Standard::create([
-                'code' => $stdData['code'],
-                'cs' => $stdData['cs'],
-                'codex' => $stdData['codex'],
-                'name_en' => $stdData['name_en'],
-                'name_kh' => $stdData['name_kh'],
-                'lab_type' => $stdData['lab_type'],
-            ]);
-    
-            $parameterIds = [];
-    
-            foreach ($stdData['parameters'] as $paramData) {
-                $existing = Parameter::where('name_en', $paramData['name_en'])
-                    ->where('name_kh', $paramData['name_kh'])
-                    ->where('formular', $paramData['formular'] ?? null)
-                    ->where('criteria_operator', $paramData['criteria_operator'])
-                    ->where('criteria_value1', $paramData['criteria_value1'])
-                    ->where('criteria_value2', $paramData['criteria_value2'] ?? null)
-                    ->where('unit', $paramData['unit'])
-                    ->where('LOQ', $paramData['LOQ'])
-                    ->where('method', $paramData['method'])
-                    ->first();
-    
-                if ($existing) {
-                    $parameterIds[] = $existing->id;
-                } else {
-                    $new = Parameter::create($paramData);
-                    $parameterIds[] = $new->id;
-                }
-            }
-    
-            $standard->parameters()->sync($parameterIds);
-        }
-    
-        return redirect()->route('standard.index')->with('success', 'Standards created successfully.');
+
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'code' => 'required|string',
+        'cs' => 'nullable|string',
+        'codex' => 'nullable|string',
+        'name_en' => 'nullable|string',
+        'name_kh' => 'nullable|string',
+        'lab_type' => 'nullable|in:Microbiological,Chemical,Others',
+
+        'parameters' => 'nullable|array|min:1',
+        'parameters.*.name_en' => 'nullable|string',
+        'parameters.*.name_kh' => 'nullable|string',
+        'parameters.*.formular' => 'nullable|string',
+        'parameters.*.criteria_operator' => 'nullable|string',
+        'parameters.*.criteria_value1' => 'nullable|string|max:50', // <- changed
+        'parameters.*.criteria_value2' => 'nullable|string',
+        'parameters.*.unit' => 'nullable|string',
+        'parameters.*.LOQ' => 'nullable|string',
+        'parameters.*.method' => 'nullable|string',
+    ]);
+
+    $standard = Standard::create([
+        'code' => $validated['code'],
+        'cs' => $validated['cs'],
+        'codex' => $validated['codex'],
+        'name_en' => $validated['name_en'],
+        'name_kh' => $validated['name_kh'],
+        'lab_type' => $validated['lab_type'],
+    ]);
+
+    $parameterIds = [];
+
+    foreach ($validated['parameters'] as $paramData) {
+        $existing = Parameter::where('name_en', $paramData['name_en'])
+            ->where('name_kh', $paramData['name_kh'])
+            ->where('formular', $paramData['formular'] ?? null)
+            ->where('criteria_operator', $paramData['criteria_operator'])
+            ->where('criteria_value1', $paramData['criteria_value1'] ?? null)
+            ->where('criteria_value2', $paramData['criteria_value2'] ?? null)
+            ->where('unit', $paramData['unit'])
+            ->where('LOQ', $paramData['LOQ'])
+            ->where('method', $paramData['method'])
+            ->first();
+
+        $parameterIds[] = $existing ? $existing->id : Parameter::create($paramData)->id;
     }
+
+    $standard->parameters()->sync($parameterIds);
+
+    return redirect()->route('standard.index')->with('success', 'Single standard inserted successfully.');
+}
+
 
     /**
      * Display the specified resource.
@@ -238,154 +260,169 @@ class StandardController extends Controller
             ->header('Content-Type', 'application/pdf');
     }
 
+    public function edit(Standard $standard)
+    {
+        $requiredLabTypes = ['Microbiological', 'Chemical', 'Others'];
 
-public function edit(Standard $standard)
-{
-    // Get all standards with the same identifying fields
-    $relatedStandards = Standard::where('code', $standard->code)
-        ->where('cs', $standard->cs)
-        ->where('codex', $standard->codex)
-        ->where('name_en', $standard->name_en)
-        ->where('name_kh', $standard->name_kh)
-        ->with('parameters')
-        ->get()
-        ->groupBy('lab_type');
+        $relatedStandards = Standard::where('code', $standard->code)
+            ->where('cs', $standard->cs)
+            ->where('codex', $standard->codex)
+            ->where('name_en', $standard->name_en)
+            ->where('name_kh', $standard->name_kh)
+            ->with('parameters')
+            ->get()
+            ->groupBy('lab_type');
 
-    // Define only required lab types (excluding 'Others')
-    $labTypes = ['Microbiological', 'Chemical'];
-
-    foreach ($labTypes as $type) {
-        if (!$relatedStandards->has($type)) {
-            $relatedStandards[$type] = collect([
-                new Standard([
-                    'code' => $standard->code,
-                    'cs' => $standard->cs,
-                    'codex' => $standard->codex,
-                    'name_en' => $standard->name_en,
-                    'name_kh' => $standard->name_kh,
-                    'lab_type' => $type,
-                    'parameters' => collect()
-                ])
-            ]);
-        }
-    }
-
-    // Khmer translations for lab types
-    $labTypeTranslations = [
-        'Microbiological' => 'ស្តង់ដាមីក្រូជីវសាស្ត្រ',
-        'Chemical' => 'ស្តង់ដាគីមីសាស្ត្រ'
-    ];
-
-    return view('standard.edit', [
-        'standard' => $standard,
-        'groupedStandards' => $relatedStandards,
-        'labTypeTranslations' => $labTypeTranslations
-    ]);
-}
-
-
-public function update(Request $request)
-{
-    $validated = $request->validate([
-        'standards' => 'required|array|min:1',
-        'standards.*.id' => 'nullable|exists:standards,id',
-        'standards.*.code' => [
-            'required',
-            'string',
-            function ($attribute, $value, $fail) use ($request) {
-                $codes = array_column($request->standards, 'code');
-                if (count(array_unique($codes)) > 1) {
-                    $fail('All standards must have the same code.');
-                }
-            },
-        ],
-        'standards.*.cs' => 'nullable|string',
-        'standards.*.codex' => 'nullable|string',
-        'standards.*.name_en' => 'nullable|string',
-        'standards.*.name_kh' => 'required|string',
-        'standards.*.lab_type' => 'required|in:Microbiological,Chemical',
-
-        'standards.*.parameters' => 'required|array|min:1',
-        'standards.*.parameters.*.name_en' => 'required|string',
-        'standards.*.parameters.*.name_kh' => 'required|string',
-        'standards.*.parameters.*.formular' => 'nullable|string',
-        'standards.*.parameters.*.criteria_operator' => 'required|string',
-        'standards.*.parameters.*.criteria_value1' => 'required|numeric',
-        'standards.*.parameters.*.criteria_value2' => 'nullable|numeric',
-        'standards.*.parameters.*.unit' => 'required|string',
-        'standards.*.parameters.*.LOQ' => 'nullable|string',
-        'standards.*.parameters.*.method' => 'nullable|string',
-    ]);
-
-    $anyRemoved = false;
-
-    foreach ($validated['standards'] as $stdData) {
-        $standard = !empty($stdData['id'])
-            ? Standard::findOrFail($stdData['id'])
-            : Standard::create(array_merge($stdData, ['lab_type' => $stdData['lab_type']]));
-
-        if (!empty($stdData['id'])) {
-            $standard->update([
-                'code' => $stdData['code'],
-                'cs' => $stdData['cs'],
-                'codex' => $stdData['codex'],
-                'name_en' => $stdData['name_en'],
-                'name_kh' => $stdData['name_kh'],
-                'lab_type' => $stdData['lab_type'],
-            ]);
-        }
-
-        $parameterIds = [];
-        foreach ($stdData['parameters'] as $paramData) {
-            $existing = Parameter::where('name_en', $paramData['name_en'])
-                ->where('name_kh', $paramData['name_kh'])
-                ->where('formular', $paramData['formular'] ?? null)
-                ->where('criteria_operator', $paramData['criteria_operator'])
-                ->where('criteria_value1', $paramData['criteria_value1'])
-                ->where('criteria_value2', $paramData['criteria_value2'] ?? null)
-                ->where('unit', $paramData['unit'])
-                ->where('LOQ', $paramData['LOQ'])
-                ->where('method', $paramData['method'])
-                ->first();
-
-            if ($existing) {
-                $parameterIds[] = $existing->id;
-            } else {
-                $new = Parameter::create($paramData);
-                $parameterIds[] = $new->id;
+        foreach ($requiredLabTypes as $type) {
+            if (!$relatedStandards->has($type)) {
+                $relatedStandards[$type] = collect([
+                    new Standard([
+                        'code' => $standard->code,
+                        'cs' => $standard->cs,
+                        'codex' => $standard->codex,
+                        'name_en' => $standard->name_en,
+                        'name_kh' => $standard->name_kh,
+                        'lab_type' => $type,
+                        'parameters' => collect([new Parameter()])
+                    ])
+                ]);
             }
         }
 
-        $originalIds = $standard->parameters()->pluck('parameters.id')->toArray();
-        $removed = array_diff($originalIds, $parameterIds);
-        if (count($removed) > 0) {
-            $anyRemoved = true;
-        }
+        $labTypeTranslations = [
+            'Microbiological' => 'Microbiological',
+            'Chemical' => 'Chemical',
+            'Others' => 'Others'
+        ];
 
-        $standard->parameters()->sync($parameterIds);
+        return view('standard.edit', [
+            'standard' => $standard,
+            'groupedStandards' => $relatedStandards,
+            'labTypeTranslations' => $labTypeTranslations,
+            'requiredLabTypes' => $requiredLabTypes
+        ]);
     }
 
-    return redirect()
-        ->route('standard.index')
-        ->with('success', 'Standards updated successfully.')
-        ->with('removed', $anyRemoved ? 'Some parameters were removed.' : null);
-}
-
-
-
-
-public function destroy(Standard $standard)
+    public function update(Request $request)
 {
-    // Detach all parameters from the standard before deleting
-    // This is important for many-to-many relationships if you don't have
-    // 'onDelete('cascade')' on your pivot table foreign keys.
-    // If you do have cascade delete on your pivot table, this line is optional
-    // as the pivot records will be removed automatically.
-    $standard->parameters()->detach();
+    try {
+        $validated = $request->validate([
+            'standards' => 'required|array:Microbiological,Chemical,Others',
+            'standards.*.id' => 'nullable|exists:standards,id',
+            'standards.*.code' => 'required|string|max:50',
+            'standards.*.cs' => 'nullable|string|max:50',
+            'standards.*.codex' => 'nullable|string|max:50',
+            'standards.*.name_en' => 'nullable|string|max:255',
+            'standards.*.name_kh' => 'nullable|string|max:255',
+            'standards.*.lab_type' => 'required|in:Microbiological,Chemical,Others',
+            'standards.*.parameters' => 'required|array|min:1',
+            'standards.*.parameters.*.id' => 'nullable|exists:parameters,id',
+            'standards.*.parameters.*.name_en' => 'required|string|max:255',
+            'standards.*.parameters.*.name_kh' => 'required|string|max:255',
+            'standards.*.parameters.*.criteria_operator' => 'required|string|max:50',
+            'standards.*.parameters.*.criteria_value1' => 'nullable|string',
+            'standards.*.parameters.*.criteria_value2' => 'nullable|string',
+            'standards.*.parameters.*.unit' => 'required|string|max:50',
+            'standards.*.parameters.*.formular' => 'nullable|string|max:255',
+            'standards.*.parameters.*.LOQ' => 'nullable|string|max:50',
+            'standards.*.parameters.*.method' => 'nullable|string|max:255',
+        ]);
 
-    $standard->delete();
+        DB::transaction(function () use ($validated) {
+            foreach ($validated['standards'] as $labType => $standardData) {
+                $standard = Standard::updateOrCreate(
+                    ['id' => $standardData['id'] ?? null],
+                    [
+                        'code' => $standardData['code'],
+                        'cs' => $standardData['cs'] ?? null,
+                        'codex' => $standardData['codex'] ?? null,
+                        'name_en' => $standardData['name_en'] ?? null,
+                        'name_kh' => $standardData['name_kh'] ?? null,
+                        'lab_type' => $labType
+                    ]
+                );
 
-    return redirect()->route('standard.index')->with('success', 'Standard deleted successfully.');
+                $parameterIds = [];
+                foreach ($standardData['parameters'] as $paramData) {
+                    $parameterData = [
+                        'name_en' => trim($paramData['name_en']),
+                        'name_kh' => trim($paramData['name_kh']),
+                        'formular' => $paramData['formular'] ?? null,
+                        'criteria_operator' => trim($paramData['criteria_operator']),
+                        'criteria_value1' => $paramData['criteria_value1'] ?? null,
+                        'criteria_value2' => $paramData['criteria_value2'] ?? null,
+                        'unit' => trim($paramData['unit']),
+                        'LOQ' => $paramData['LOQ'] ?? null,
+                        'method' => $paramData['method'] ?? null,
+                    ];
+
+                    $parameter = Parameter::updateOrCreate(
+                        ['id' => $paramData['id'] ?? null],
+                        $parameterData
+                    );
+
+                    $parameterIds[] = $parameter->id;
+                }
+
+                $standard->parameters()->sync($parameterIds);
+            }
+        });
+
+        return redirect()->route('standard.index')
+            ->with('success', 'Standards updated successfully.');
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return redirect()->back()
+            ->withErrors($e->validator)
+            ->withInput();
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->with('error', 'Something went wrong: ' . $e->getMessage())
+            ->withInput();
+    }
 }
 
+
+public function destroyByCode($code)
+{
+    $standards = Standard::where('code', $code)->get();
+
+    if ($standards->isEmpty()) {
+        return redirect()->route('standard.index')->with('error', 'No standards found for the provided code.');
+    }
+
+    foreach ($standards as $standard) {
+        $standard->parameters()->detach();
+        $standard->delete();
+    }
+
+    return redirect()->route('standard.index')->with('success', "All standards with code $code have been deleted.");
+}
+
+
+
+    //   Total Standards
+    public function totalByLabTypes()
+    {
+        $counts = Standard::select('lab_type', DB::raw('count(*) as total'))
+            ->groupBy('lab_type')
+            ->pluck('total', 'lab_type');
+        $labTypes = ['Microbiological', 'Chemical', 'Others'];
+        $totals = [];
+        $sum = $counts->sum();
+
+        foreach ($labTypes as $type) {
+            $count = $counts->get($type, 0);
+            $percentage = $sum > 0 ? round(($count / $sum) * 100, 2) : 0;
+            $totals[$type] = [
+                'count' => $count,
+                'percentage' => $percentage
+            ];
+        }
+
+        return view('standard.lab_totals', [
+            'totals' => $totals,
+            'overall' => $sum
+        ]);
+    }
 }
