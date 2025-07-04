@@ -9,7 +9,7 @@
                        class="form-control leading-tight focus:outline-none bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out"
                        name="standards[{{ $labType }}][parameters][{{ $index }}][name_en]"
                        value="{{ old("standards.$labType.parameters.$index.name_en", $parameter->name_en ?? '') }}" 
-                       required>
+                       >
             </div>
     
             <!-- Name (Khmer) -->
@@ -19,7 +19,7 @@
                        class="form-control leading-tight focus:outline-none bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out"
                        name="standards[{{ $labType }}][parameters][{{ $index }}][name_kh]"
                        value="{{ old("standards.$labType.parameters.$index.name_kh", $parameter->name_kh ?? '') }}" 
-                       required>
+                       >
             </div>
     
             <!-- Formular -->
@@ -39,7 +39,7 @@
                        placeholder="Operator"
                        value="{{ old("standards.$labType.parameters.$index.criteria_operator", $parameter->criteria_operator ?? '') }}"
                        class="form-input w-full leading-tight focus:outline-none border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block p-3 dark:text-[16px] dark:text-gray-700 dark:placeholder-gray-400 focus:ring-[1px] duration-300 ease-out"
-                       required>
+                       >
                 <datalist id="criteria-operators">
                     @foreach(['<','≤', '<=', '=', '>', '>=', 'Mix', 'Min'] as $operator)
                         <option value="{{ $operator }}">
@@ -110,7 +110,7 @@
                        class="form-control leading-tight focus:outline-none bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
                        name="standards[{{ $labType }}][parameters][{{ $index }}][unit]"
                        value="{{ old("standards.$labType.parameters.$index.unit", $parameter->unit ?? '') }}"
-                       required>
+                       >
             </div>
     
             <!-- LOQ -->
