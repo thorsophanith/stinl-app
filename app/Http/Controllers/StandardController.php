@@ -42,7 +42,7 @@ class StandardController extends Controller
         }
 
         // Get standards by type with percentages
-        $labTypes = ['Microbiological', 'Chemical', 'Others'];
+        $labTypes = ['Microbiological', 'Chemical'];
         $counts = Standard::select('lab_type', DB::raw('count(*) as total'))
             ->groupBy('lab_type')
             ->pluck('total', 'lab_type');
@@ -89,7 +89,12 @@ class StandardController extends Controller
 
     public function createOne()
 {
-    return view('standard.createOne');
+    $parameters = Parameter::all();
+    $labTypeTranslations = [
+        'Microbiological' => 'Microbiological',
+        'Chemical' => 'Chemical',
+    ];
+    return view('standard.createOne', compact('labTypeTranslations'));
 }
 
 public function create()
@@ -98,7 +103,6 @@ public function create()
     $labTypeTranslations = [
         'Microbiological' => 'Microbiological',
         'Chemical' => 'Chemical',
-        'Others' => 'Others'
     ];
     return view('standard.create', compact('labTypeTranslations'));
 }
@@ -110,18 +114,18 @@ public function storeOne(Request $request)
         'code' => 'required|string',
         'cs' => 'nullable|string',
         'codex' => 'nullable|string',
-        'name_en' => 'nullable|string',
-        'name_kh' => 'nullable|string',
+        'name_en' => 'required|string',
+        'name_kh' => 'required|string',
 
         'standards' => 'required|array|min:1',
-        'standards.*.lab_type' => 'nullable|in:Microbiological,Chemical,Others',
-        'standards.*.parameters' => 'nullable|array|min:1',
+        'standards.*.lab_type' => 'required|in:Microbiological,Chemical,Others',
+        'standards.*.parameters' => 'required|array|min:1',
         'standards.*.parameters.*.name_en' => 'nullable|string',
         'standards.*.parameters.*.name_kh' => 'nullable|string',
         'standards.*.parameters.*.formular' => 'nullable|string',
         'standards.*.parameters.*.criteria_operator' => 'nullable|string',
-        'standards.*.parameters.*.criteria_value1' => 'nullable|string|max:50', // <- changed
-        'standards.*.parameters.*.criteria_value2' => 'nullable|string',
+        'standards.*.parameters.*.criteria_value1' => 'nullable|string' ?? null,
+        'standards.*.parameters.*.criteria_value2' => 'nullable|string' ?? null,
         'standards.*.parameters.*.unit' => 'nullable|string',
         'standards.*.parameters.*.LOQ' => 'nullable|string',
         'standards.*.parameters.*.method' => 'nullable|string',
@@ -140,18 +144,19 @@ public function storeOne(Request $request)
         $parameterIds = [];
 
         foreach ($labData['parameters'] as $paramData) {
-            $existing = Parameter::where('name_en', $paramData['name_en'])
-                ->where('name_kh', $paramData['name_kh'])
-                ->where('formular', $paramData['formular'] ?? null)
-                ->where('criteria_operator', $paramData['criteria_operator'])
-                ->where('criteria_value1', $paramData['criteria_value1'] ?? null)
-                ->where('criteria_value2', $paramData['criteria_value2'] ?? null)
-                ->where('unit', $paramData['unit'])
-                ->where('LOQ', $paramData['LOQ'])
-                ->where('method', $paramData['method'])
-                ->first();
+            $parameter = Parameter::firstOrCreate([
+                'name_en' => $paramData['name_en'],
+                'name_kh' => $paramData['name_kh'],
+                'formular' => $paramData['formular'] ?? null,
+                'criteria_operator' => $paramData['criteria_operator'] ?? null,
+                'criteria_value1' => $paramData['criteria_value1'] ?? null,
+                'criteria_value2' => $paramData['criteria_value2'] ?? null,
+                'unit' => $paramData['unit'] ?? null,
+                'LOQ' => $paramData['LOQ'] ?? null,
+                'method' => $paramData['method'] ?? null,
+            ]);
 
-            $parameterIds[] = $existing ? $existing->id : Parameter::create($paramData)->id;
+            $parameterIds[] = $parameter->id;
         }
 
         $standard->parameters()->sync($parameterIds);
@@ -159,6 +164,7 @@ public function storeOne(Request $request)
 
     return redirect()->route('standard.index')->with('success', 'Standard with all lab types created successfully.');
 }
+
 
 
 
@@ -170,9 +176,9 @@ public function store(Request $request)
         'codex' => 'nullable|string',
         'name_en' => 'nullable|string',
         'name_kh' => 'nullable|string',
-        'lab_type' => 'nullable|in:Microbiological,Chemical,Others',
+        'lab_type' => 'nullable|in:Microbiological,Chemical',
 
-        'parameters' => 'nullable|array|min:1',
+        'parameters' => 'required|array|min:1',
         'parameters.*.name_en' => 'nullable|string',
         'parameters.*.name_kh' => 'nullable|string',
         'parameters.*.formular' => 'nullable|string',
@@ -236,13 +242,22 @@ public function store(Request $request)
         ]);
     }
 
-    public function downloadParametersPdf(string $id)
+    public function downloadParametersPdf(string $code)
     {
-        $standard = standard::findOrFail($id);
-        $parameters = $standard->parameters;
-
-        $html = View::make('pdf.parameters', compact('standard', 'parameters'))->render();
-
+        // Get standards by code and 3 lab types
+        $standards = Standard::with('parameters')
+            ->where('code', $code)
+            ->whereIn('lab_type', ['Microbiological', 'Chemical'])
+            ->get();
+    
+        if ($standards->isEmpty()) {
+            return back()->with('error', 'No standards found for the given code.');
+        }
+    
+        // Render view with multiple standards
+        $html = View::make('pdf.parameters', compact('standards'))->render();
+    
+        // Create mPDF instance with Khmer font support
         $mpdf = new Mpdf([
             'tempDir' => storage_path('app/mpdf'),
             'fontDir' => [base_path('resources/fonts')],
@@ -254,15 +269,17 @@ public function store(Request $request)
             ],
             'default_font' => 'noto',
         ]);
-
+    
         $mpdf->WriteHTML($html);
-        return response($mpdf->Output("standard-{$standard->id}-parameters.pdf", 'D'), 200)
+    
+        return response($mpdf->Output("standards-{$code}.pdf", 'D'), 200)
             ->header('Content-Type', 'application/pdf');
     }
 
+
     public function edit(Standard $standard)
     {
-        $requiredLabTypes = ['Microbiological', 'Chemical', 'Others'];
+        $requiredLabTypes = ['Microbiological', 'Chemical'];
 
         $relatedStandards = Standard::where('code', $standard->code)
             ->where('cs', $standard->cs)
@@ -292,7 +309,7 @@ public function store(Request $request)
         $labTypeTranslations = [
             'Microbiological' => 'Microbiological',
             'Chemical' => 'Chemical',
-            'Others' => 'Others'
+            // 'Others' => 'Others'
         ];
 
         return view('standard.edit', [
@@ -307,14 +324,14 @@ public function store(Request $request)
 {
     try {
         $validated = $request->validate([
-            'standards' => 'required|array:Microbiological,Chemical,Others',
+            'standards' => 'required|array:Microbiological,Chemical',
             'standards.*.id' => 'nullable|exists:standards,id',
             'standards.*.code' => 'nullable|string|max:50',
             'standards.*.cs' => 'nullable|string|max:50',
             'standards.*.codex' => 'nullable|string|max:50',
             'standards.*.name_en' => 'nullable|string|max:255',
             'standards.*.name_kh' => 'nullable|string|max:255',
-            'standards.*.lab_type' => 'nullable|in:Microbiological,Chemical,Others',
+            'standards.*.lab_type' => 'nullable|in:Microbiological,Chemical',
             'standards.*.parameters' => 'required|array|min:1',
             'standards.*.parameters.*.id' => 'nullable|exists:parameters,id',
             'standards.*.parameters.*.name_en' => 'required|string|max:255',

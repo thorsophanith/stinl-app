@@ -35,7 +35,6 @@
         $labTypeLabels = [
             'Microbiological' => 'Microbiological',
             'Chemical' => 'Chemical',
-            'Others' => 'Others'
         ];
 
         function formatChemicalFormula($text) {
@@ -61,7 +60,7 @@
         @foreach($groupedStandards as $labType => $standards)
             @foreach($standards as $std)
                 @if ($std->parameters->isNotEmpty())
-                <div class="standard-section card mb-4 px-1 md:px-5" data-lab-type="{{ $labType }}">
+                <div class="standard-section card mb-4 px-1" data-lab-type="{{ $labType }}">
                     <div class="">
                         <h2 class="card-header mt-10 mb-10 bg-blue-600 text-white py-3 ring-2 ring-blue-400 px-5 rounded-md font-medium pb-3">
                             {{ $labTypeLabels[$labType] ?? $labType }}
@@ -75,7 +74,7 @@
                             @foreach (['code' => 'Code*', 'cs' => 'CS', 'codex' => 'CODEX'] as $field => $label)
                             <div class="space-y-2">
                                 <label class="form-label text-sm text-gray-700 px-1 font-medium">{{ $label }}</label>
-                                <input type="text" name="standards[{{ $labType }}][{{ $field }}]" class="form-control w-full p-3 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500 text-sm" value="{{ old("standards.$labType.$field", $std->$field) }}" {{ $field === 'code' ? 'required' : '' }}>
+                                <input type="text" name="standards[{{ $labType }}][{{ $field }}]" class="form-control leading-tight focus:outline-none bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" value="{{ old("standards.$labType.$field", $std->$field) }}" {{ $field === 'code' ? 'required' : '' }}>
                             </div>
                             @endforeach
                         </div>
@@ -83,11 +82,11 @@
                         <div class="row mb-3 grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-2">
                                 <label class="form-label text-sm text-gray-700 px-1 font-medium">Name (English)*</label>
-                                <input type="text" name="standards[{{ $labType }}][name_en]" class="form-control w-full p-3 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500 text-sm" value="{{ old("standards.$labType.name_en", $std->name_en) }}">
+                                <input type="text" name="standards[{{ $labType }}][name_en]" class="form-control leading-tight focus:outline-none bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" value="{{ old("standards.$labType.name_en", $std->name_en) }}">
                             </div>
                             <div class="space-y-2">
                                 <label class="form-label text-sm text-gray-700 px-1 font-medium">Name (Khmer)*</label>
-                                <input type="text" name="standards[{{ $labType }}][name_kh]" class="form-control w-full p-3 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500 text-sm" value="{{ old("standards.$labType.name_kh", $std->name_kh) }}" required>
+                                <input type="text" name="standards[{{ $labType }}][name_kh]" class="form-control leading-tight focus:outline-none bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700 dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" value="{{ old("standards.$labType.name_kh", $std->name_kh) }}">
                             </div>
                         </div>
 
@@ -101,7 +100,6 @@
                             <button type="button" class="add-parameter bg-green-600 text-white text-sm px-3 mb-2 py-1 rounded hover:bg-green-700" data-lab-type="{{ $labType }}" data-standard-id="{{ $std->id }}">
                                 + Add Parameter
                             </button>
-                            
                         </div>
                     </div>
                 </div>
@@ -111,7 +109,6 @@
 
         <div class="flex justify-end px-2 mb-3">
             <button type="submit" class="btn bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ring-2 ring-blue-300">Update Standards</button>
-            
         </div>
     </form>
 </div>

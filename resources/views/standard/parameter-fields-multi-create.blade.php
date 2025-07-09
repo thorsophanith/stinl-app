@@ -1,6 +1,10 @@
-<div class="parameter-groups mb-6 p-3 border rounded ease-out duration-300 bg-gray-100 ring1">
+
+{{-- This Code Not use --}}
+
+
+{{-- <div class="parameter-groups mb-6 p-3 border rounded ease-out duration-300 bg-gray-100 ring1">
     <div class=" mb-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" data-index="{{ $loop->index }}">
-        <div class="parameter-label col-span-full font-bold text-blue-600 text-lg md:text-xl py-3">Parameter {{ $paramIndex + 1 }}</div>
+        <div class="parameter-label col-span-full font-bold text-blue-600 text-lg md:text-xl py-3"></div>
         <div  >
             <label class="form-label text-sm text-gray-500 px-1 font-medium">Parameter Name (English)<span class="text-red-600 relative">* <p class="absolute top-0 right-0 animate-ping ease-out">*</p></span></label>
             <input class="form-control leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700  dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out" 
@@ -97,7 +101,7 @@
         <div>
             <label class="form-label text-sm text-gray-500 px-1 font-medium">Unit<span class="text-red-600 relative">* <p class="absolute top-0 right-0 animate-ping ease-out">*</p></span></label>
             <input class="form-control leading-tight focus:outline-none form-control bg-white border border-gray-300 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-3 dark:text-[16px] dark:text-gray-700  dark:placeholder-gray-400 dark:focus:ring-sky-500 dark:focus:border-sky-400 focus:ring-[1px] duration-300 ease-out"
-             type="text" name="standards[{{ $loop->index }}][parameters][0][unit]" placeholder="Unit" required>
+             type="text" name="standards[{{ $loop->index }}][parameters][0][unit]" placeholder="Unit"  required>
         </div>
         <div>
             <label class="form-label text-sm text-gray-500 px-1 font-medium">LOQ</label>
@@ -114,12 +118,4 @@
     <div class="flex justify-end px-2 pt-2">
         <button type="button" class="remove-parameters btn btn-sm btn-danger remove-parameter max-md:text-xs text-[12px] bg-red-500 hover:bg-red-600 ring-2 ring-red-300 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">Remove</button>
     </div>
-</div>
-
-
-
-
-<script>
-
-
-</script>
+</div> --}}

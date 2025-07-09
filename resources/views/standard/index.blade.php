@@ -154,5 +154,28 @@
         </div>
     </div>
 </div>
+@if ($errors->any())
+    <script>
+        window.addEventListener('load', () => {
+            document.getElementById('errorDialog').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+
+    <div id="errorDialog" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-gray-800 relative">
+            <h2 class="text-lg font-semibold mb-2">⚠️ Submission Alert</h2>
+            <ul class="list-disc list-inside text-sm text-red-600 mb-4 max-h-48 overflow-y-auto pr-2">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeErrorDialog()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Stay and Edit</button>
+                <a href="{{ url()->previous() }}" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Leave</a>
+            </div>
+        </div>
+    </div>
+@endif
 
 @endsection
