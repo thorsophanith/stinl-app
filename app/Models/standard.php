@@ -12,15 +12,7 @@ class standard extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'code',
-        'cs',
-        'codex',
-        'cs',
-        'name_en',
-        'name_kh',
-        'lab_type',
-    ];
+    protected $fillable = ['code', 'cs', 'codex', 'name_en', 'name_kh', 'lab_type'];
     protected $casts = [
         'cs' => 'string', // Ensures 'cs' is always treated as a string
     ];

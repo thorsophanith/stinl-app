@@ -20,7 +20,7 @@
 
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-2 md:p-6 custom-scrollbar">
 
-            <div class="mt-8 bg-white p-3 md:p-6 rounded-xl shadow-lg">
+            <div class="mt-8 bg-white p-1 md:p-6 rounded-xl shadow-lg">
                 <div class="overflow-x-auto">
                     @yield('content')
                 </div>
