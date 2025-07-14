@@ -217,10 +217,12 @@ public function store(Request $request)
     }
 
     $standard->parameters()->sync($parameterIds);
+    return response()->json([
+    'message' => 'Standard created successfully.',
+    'standard' => $standard,
+]);
 
-    return redirect()->route('standard.index')->with('success', 'Single standard inserted successfully.');
 }
-
 
     /**
      * Display the specified resource.
@@ -243,38 +245,42 @@ public function store(Request $request)
     }
 
     public function downloadParametersPdf(string $code)
-    {
-        // Get standards by code and 3 lab types
-        $standards = Standard::with('parameters')
-            ->where('code', $code)
-            ->whereIn('lab_type', ['Microbiological', 'Chemical'])
-            ->get();
-    
-        if ($standards->isEmpty()) {
-            return back()->with('error', 'No standards found for the given code.');
-        }
-    
-        // Render view with multiple standards
-        $html = View::make('pdf.parameters', compact('standards'))->render();
-    
-        // Create mPDF instance with Khmer font support
-        $mpdf = new Mpdf([
-            'tempDir' => storage_path('app/mpdf'),
-            'fontDir' => [base_path('resources/fonts')],
-            'fontdata' => [
-                'noto' => [
-                    'R' => 'NotoSansKhmer-Regular.ttf',
-                    'B' => 'NotoSansKhmer-Bold.ttf',
-                ],
-            ],
-            'default_font' => 'noto',
-        ]);
-    
-        $mpdf->WriteHTML($html);
-    
-        return response($mpdf->Output("standards-{$code}.pdf", 'D'), 200)
-            ->header('Content-Type', 'application/pdf');
+{
+    // Get standards by code and 3 lab types
+    $standards = Standard::with('parameters')
+        ->where('code', $code)
+        ->whereIn('lab_type', ['Microbiological', 'Chemical'])
+        ->get();
+
+    if ($standards->isEmpty()) {
+        return back()->with('error', 'No standards found for the given code.');
     }
+
+    // Render view with multiple standards
+    $html = View::make('pdf.parameters', compact('standards'))->render();
+
+    // Create mPDF instance with standard fonts
+    $mpdf = new Mpdf([
+        'tempDir' => storage_path('app/mpdf'),
+        'mode' => 'utf-8',
+        'format' => 'A4',
+        'orientation' => 'P',
+        'margin_left' => 15,
+        'margin_right' => 15,
+        'margin_top' => 16,
+        'margin_bottom' => 16,
+        'margin_header' => 9,
+        'margin_footer' => 9,
+    ]);
+
+    $mpdf->SetDisplayMode('fullpage');
+    $mpdf->SetTitle("Standards Parameters - {$code}");
+    $mpdf->WriteHTML($html);
+
+    return response($mpdf->Output("standards-{$code}.pdf", 'D'), 200)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename="standards-'.$code.'.pdf"');
+}
 
 
     public function edit(Standard $standard)
