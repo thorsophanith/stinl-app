@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('standard', StandardController::class);
+    Route::apiResource('parameter-prices', ParameterPriceController::class);
 
 
     Route::post('/standards/{code}/parameters/download', [StandardController::class, 'downloadParametersPdf'])->name('standard.parameters.download');
