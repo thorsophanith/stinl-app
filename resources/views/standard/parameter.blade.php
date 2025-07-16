@@ -55,9 +55,6 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $parameter->method ?? ''}}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $parameter->criteria_operator }}</td>
-                                    {{-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {!! $parameter->criteria_value2 ? $parameter->criteria_value1 . ' - ' . $parameter->criteria_value2 : $parameter->criteria_value1 !!}
-                                    </td> --}}
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         @php
                                             $criteriaValues = [];
@@ -89,14 +86,6 @@
         </div>
     @endforeach
             </div>
-            
-            {{-- <form method="POST" action="{{ route('standard.parameters.download', ['code' => $standard->code]) }}" class="mt-12 flex justify-end px-16">
-                @csrf
-                <button type="submit"
-                    class="max-md:text-xs bg-green-500 hover:bg-green-600 ring-2 ring-green-300 ease-in px-4 py-1.5 text-white duration-300 font-medium rounded-md">
-                    ⬇️ Download PDF
-                </button>
-            </form> --}}
             <form method="POST" action="{{ route('standard.parameters.download', ['code' => $standard->code]) }}">
                 @csrf
                 <button type="submit" class="btn btn-sm btn-blue">Download PDF</button>

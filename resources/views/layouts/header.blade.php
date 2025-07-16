@@ -68,7 +68,7 @@
             </div>
 
             <div
-              class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transform transition-all duration-200 ease-out animate-fade-in hidden"
+              class="origin-top-right absolute right-0 z-50 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transform transition-all duration-200 ease-out animate-fade-in hidden"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-button"

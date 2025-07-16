@@ -43,7 +43,7 @@
         </div>
         @endforeach
 
-        <div class="pt-6 text-center">
+        <div class="w-full flex justify-end">
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-semibold">Submit</button>
         </div>
     </form>

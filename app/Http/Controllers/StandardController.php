@@ -19,21 +19,23 @@ class StandardController extends Controller
     public function index(Request $request)
     {
         // Get monthly standards data with dynamic year range
-        $monthlyStandards = Standard::select(
-            DB::raw('MONTH(created_at) as month'),
-            DB::raw('YEAR(created_at) as year'),
-            DB::raw('COUNT(*) as count')
-        )
-        ->whereBetween('created_at', [now()->subYear(), now()]) // Last 12 months
-        ->groupBy('year', 'month')
-        ->orderBy('year', 'asc')
-        ->orderBy('month', 'asc')
-        ->get()
-        ->mapWithKeys(function ($item) {
-            $monthName = date('M Y', mktime(0, 0, 0, $item->month, 1, $item->year));
-            return [$monthName => $item->count];
-        })
-        ->toArray();
+        $monthlyStandards = Standard::with('parameters')
+            ->select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('YEAR(created_at) as year'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereBetween('created_at', [now()->subYear(), now()]) // Last 12 months
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                $monthName = date('M Y', mktime(0, 0, 0, $item->month, 1, $item->year));
+                return [$monthName => $item->count];
+            })
+            ->toArray();
+
         // Fill in missing months with 0 counts
         $completeMonthlyData = [];
         for ($i = 11; $i >= 0; $i--) {
@@ -43,7 +45,8 @@ class StandardController extends Controller
 
         // Get standards by type with percentages
         $labTypes = ['Microbiological', 'Chemical'];
-        $counts = Standard::select('lab_type', DB::raw('count(*) as total'))
+        $counts = Standard::with('parameters')
+            ->select('lab_type', DB::raw('count(*) as total'))
             ->groupBy('lab_type')
             ->pluck('total', 'lab_type');
 
@@ -57,25 +60,26 @@ class StandardController extends Controller
             $percentages[$type] = $percent;
             $knownTotal += $count;
         }
-    
+
         // Other standards data
         $otherCount = $totalAll - $knownTotal;
         $otherPercent = $totalAll > 0 ? round(($otherCount / $totalAll) * 100, 1) : 0;
-    
-        // Paginated standards
+
+        // Paginated standards with parameters relationship
         $perPage = $request->input('per_page', 10);
-        $query = Standard::selectRaw('MIN(id) as id, code, cs, codex, name_en, name_kh')
+        $query = Standard::with('parameters')
+            ->selectRaw('MIN(id) as id, code, cs, codex, name_en, name_kh')
             ->groupBy('code', 'cs', 'codex', 'name_en', 'name_kh');
-    
+
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->havingRaw('name_en LIKE ? OR name_kh LIKE ? OR code LIKE ? OR codex LIKE ? OR cs LIKE ?', [
                 "%$search%", "%$search%", "%$search%", "%$search%", "%$search%"
             ]);
         }
-    
+
         $standards = $query->paginate($perPage);
-    
+
         return view('standard.index', [
             'monthlyStandards' => $completeMonthlyData,
             'standards' => $standards,
