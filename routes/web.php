@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ParameterPriceController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StandardController;
 use App\Models\standard;
+use PHPUnit\Runner\Extension\ParameterCollection;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +47,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('standard', StandardController::class);
     Route::apiResource('parameter-prices', ParameterPriceController::class);
 
+    //
+
+    Route::get('/parameter-prices', [ParameterPriceController::class, 'indexWeb'])->name('parameter-prices.index');
+    Route::get('/create', [ParameterPriceController::class, 'create'])->name('parameter-prices.create');
+    Route::get('parameter-prices/{id}/edit', [ParameterPriceController::class, 'edit'])->name('parameter-prices.edit');
+    Route::put('parameter-prices/{id}', [ParameterPriceController::class, 'update'])->name('parameter-prices.update');
+    Route::post('/parameter-prices', [ParameterPriceController::class, 'store'])->name('parameter-prices.store');
+    Route::get('/parameter-prices/view/{id}', [ParameterPriceController::class, 'showWeb'])->name('parameter-prices.view');
+    Route::delete('parameter-prices/{id}', [ParameterPriceController::class, 'destroy'])->name('parameter-prices.destroy');
+
+    //
 
     Route::post('/standards/{code}/parameters/download', [StandardController::class, 'downloadParametersPdf'])->name('standard.parameters.download');
 
@@ -53,8 +66,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('standard/{standard}/edit', [StandardController::class, 'edit'])
     ->name('standard.edit.multi');
-
-
 
     Route::put('standard/update', [StandardController::class, 'update'])
     ->name('standard.update.multi');
@@ -72,6 +83,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('standards/{standard}', [StandardController::class, 'destroy'])->name('standard.destroy');
     Route::delete('/standard/delete-by-code/{code}', [StandardController::class, 'destroyByCode'])->name('standard.destroyByCode');
 
+
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
-

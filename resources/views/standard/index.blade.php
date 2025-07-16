@@ -2,16 +2,17 @@
 @section('title', 'Standard Page')
 @section('content')
 
+<link rel="stylesheet" href="/css/animations.css">
 
 <style>
     .rich-text-editor {
         border: 1px solid #ccc;
-        width: 600px; /* Adjust as needed */
-        min-height: 200px; /* Adjust as needed */
+        width: 600px;
+        min-height: 200px;
         font-family: Arial, sans-serif;
         display: flex;
         flex-direction: column;
-        margin: 20px; /* Add some margin for better viewing */
+        margin: 20px;
     }
 
     .toolbar {
@@ -19,7 +20,7 @@
         padding: 5px;
         border-bottom: 1px solid #ccc;
         display: flex;
-        gap: 5px; /* Space between buttons */
+        gap: 5px;
     }
 
     .toolbar button {
@@ -27,123 +28,111 @@
         border: 1px solid #bbb;
         padding: 5px 10px;
         cursor: pointer;
-        font-weight: bold; /* For B, I, U */
+        font-weight: bold;
         font-style: normal;
         text-decoration: none;
-        border-radius: 3px; /* Slightly rounded corners */
+        border-radius: 3px;
     }
 
     .toolbar button:hover {
         background-color: #d0d0d0;
     }
 
-    /* Specific styles for subscript/superscript buttons if desired */
     .toolbar button[data-command="subscript"] {
-        font-size: 0.8em; /* Adjust for subscript visual */
-        vertical-align: sub; /* Help align it visually */
+        font-size: 0.8em;
+        vertical-align: sub;
     }
 
     .toolbar button[data-command="superscript"] {
-        font-size: 0.8em; /* Adjust for superscript visual */
-        vertical-align: super; /* Help align it visually */
+        font-size: 0.8em;
+        vertical-align: super;
     }
-
 
     .content-area {
         padding: 10px;
-        flex-grow: 1; /* Makes it take up remaining space */
-        outline: none; /* Remove default focus outline */
+        flex-grow: 1;
+        outline: none;
         background-color: #fff;
-        line-height: 1.5; /* Better readability */
+        line-height: 1.5;
     }
 </style>
 
 @if (session('success'))
-    <div class="mb-4 px-4 py-3 text-green-800 bg-green-100 border border-green-300 rounded-md">
+    <div class="mb-4 px-4 py-3 text-green-800 bg-green-100 border border-green-300 rounded-md animate-fade-in">
         {{ session('success') }}
     </div>
 @endif
 
 @if (session('error'))
-    <div class="mb-4 px-4 py-3 text-red-800 bg-red-100 border border-red-300 rounded-md">
+    <div class="mb-4 px-4 py-3 text-red-800 bg-red-100 border border-red-300 rounded-md animate-fade-in">
         {{ session('error') }}
     </div>
 @endif
 
-    <div class="flex items-center justify-between px-3">
-        <h1 class="text-xl md:text-2xl font-bold mb-4">Standard Page</h1>
-        <div class="flex gap-3">
-            <a href="{{ route('standard.createOne') }}" class="px-4 py-1.5 bg-green-500 hover:bg-green-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">Add One Standard</a>
-            <a href="{{ route('standard.create') }}" class="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">Add New Standards</a>
-        </div>
-
+<div class="flex items-center justify-between px-3 animate-slide-down">
+    <h1 class="text-xl md:text-2xl font-bold mb-4">Standard Page</h1>
+    <div class="flex gap-3">
+        <a href="{{ route('standard.createOne') }}" class="px-4 py-1.5 bg-green-500 hover:bg-green-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">Add One Standard</a>
+        <a href="{{ route('standard.create') }}" class="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">Add New Standards</a>
     </div>
-        <div class=" bg-white rounded-lg shadow-md p-8">
+</div>
 
-            <form method="GET" action="{{ route('standard.index') }}" class="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
-                <input
-                    type="text"
-                    name="search"
-                    placeholder="Search..."
-                    value="{{ request('search') }}"
-                    class="w-full sm:w-auto border px-3 py-2 rounded-md shadow-sm focus:ring-blue-300 focus:outline-blue-500"
-                >
-                <div class="flex items-center gap-2">
-                    <label for="page-size" class="text-gray-700 font-medium">Items per page:</label>
-                    <select id="page-size" name="per_page" class="border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="this.form.submit()">
-                        {{-- <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option> --}}
-                        <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
-                        <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
-                        <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
-                        <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
-                    </select>
-                </div>
-            </form>
-            <div class="table-container overflow-auto">
-                <table class="min-w-full">
-                    <thead class="bg-gray-100 rounded-md">
-                        <tr>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">STD</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">CS</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Codex</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse ($standards as $standard)
-                            <tr class="cursor-pointer hover:bg-blue-50 ease-out duration-300 transition">
-                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->code ?? '--' }}</td>
-                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="w-[300px] px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_kh }} ({{ $standard->name_en ?? '--' }})</td>
-                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->cs ?? '--' }}</td>
-                                <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->codex ?? '--' }}</td>
-
-
-                                <td class="py-2 text-gray-700 flex gap-2 justify-center items-center text-sm lg:w-[90px]">
-                                    <a href="{{ route('standard.edit', $standard->id) }}" class="max-md:text-xs bg-blue-500 px-2.5 md:px-3 py-[6px]  rounded-lg text-white font-medium hover:bg-blue-600 duration-300 ease-out ">Edit</a>
-                                    <a class="max-md:text-xs bg-red-500 px-2.5 md:px-3 py-[7px] rounded-lg text-white font-medium hover:bg-red-600 duration-300 ease-out ">
-                                        <form action="{{ route('standard.destroyByCode', $standard->code) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete all standards with code {{ $standard->code }}?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" onclick="showDeleteDialog(this.form)" class="btn btn-danger">Delete</button>
-                                        </form>
-                                    </a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="px-6 py-4 text-center text-gray-500">No data found.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-            <div class="mt-8">
-                {{ $standards->appends(request()->query())->links() }}
-            </div>
+<div class="bg-white rounded-lg shadow-md p-8 animate-fade-in-up">
+    <form method="GET" action="{{ route('standard.index') }}" class="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
+        <input type="text" name="search" placeholder="Search..." value="{{ request('search') }}" class="w-full sm:w-auto border px-3 py-2 rounded-md shadow-sm focus:ring-blue-300 focus:outline-blue-500">
+        <div class="flex items-center gap-2">
+            <label for="page-size" class="text-gray-700 font-medium">Items per page:</label>
+            <select id="page-size" name="per_page" class="border-b rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="this.form.submit()">
+                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
+                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+            </select>
         </div>
+    </form>
 
-        <!-- Delete Confirmation Dialog -->
+    <div class="table-container overflow-auto">
+        <table class="min-w-full">
+            <thead class="bg-gray-100 rounded-md">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">STD</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">CS</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Codex</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Action</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse ($standards as $standard)
+                    <tr class="cursor-pointer hover:bg-blue-50 ease-out duration-300 transition animate-fade-in">
+                        <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->code ?? '--' }}</td>
+                        <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="w-[300px] px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_kh }} ({{ $standard->name_en ?? '--' }})</td>
+                        <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->cs ?? '--' }}</td>
+                        <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->codex ?? '--' }}</td>
+                        <td class="py-2 text-gray-700 flex gap-2 justify-center items-center text-sm lg:w-[90px]">
+                            <a href="{{ route('standard.edit', $standard->id) }}" class="px-4 py-1 bg-blue-500 hover:bg-blue-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 font-medium">Edit</a>
+                            <a class="px-4 py-1 bg-red-500 hover:bg-red-600 ease-in text-white rounded-md duration-300 ring-2 ring-red-300 mb-1 font-medium">
+                                <form action="{{ route('standard.destroyByCode', $standard->code) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete all standards with code {{ $standard->code }}?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" onclick="showDeleteDialog(this.form)" class="btn btn-danger">Delete</button>
+                                </form>
+                            </a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">No data found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-8">
+        {{ $standards->appends(request()->query())->links() }}
+    </div>
+</div>
+
 <div id="deleteDialog" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300">
     <div id="deleteBox" class="bg-white p-6 rounded-2xl shadow-2xl w-11/12 max-w-md text-gray-800 scale-95 opacity-0 transition-all duration-300">
         <h2 class="text-lg font-semibold mb-2">🗑️ Confirm Deletion</h2>
@@ -154,6 +143,7 @@
         </div>
     </div>
 </div>
+
 @if ($errors->any())
     <script>
         window.addEventListener('load', () => {
@@ -177,5 +167,4 @@
         </div>
     </div>
 @endif
-
 @endsection
