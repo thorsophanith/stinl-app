@@ -97,7 +97,7 @@
                     <tr class="hover:bg-blue-50 transition ease-out duration-300">
                         <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{{ $price->code }}</td>
                         <td class="w-[300px] px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $price->parameter?->name_en ?? $price->parameter }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $price->test_duration ?? '-' }} day</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $price->test_duration ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $price->lab_type ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">៛{{ number_format($price->price) }}</td>
                         <td class="py-2 text-gray-700 flex gap-2 justify-center items-center text-xs lg:w-[90px]">

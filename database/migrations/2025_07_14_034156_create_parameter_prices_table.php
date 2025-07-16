@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique()->nullable(); // Unique company price code
             $table->string('parameter')->nullable();      // Name of the parameter
-            $table->integer('test_duration')->nullable(); // Number of days
+            $table->string('test_duration')->nullable();
             $table->float('price', 8, 2)->nullable();      // Floating price (e.g., 999999.99)
             $table->string('lab_type')->nullable();       // Type of lab
             $table->unsignedBigInteger('parameter_id')->nullable(); // Foreign key
