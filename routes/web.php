@@ -1,13 +1,14 @@
 <?php
 
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\ParameterPriceController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StandardController;
 use App\Models\standard;
 use PHPUnit\Runner\Extension\ParameterCollection;
+use App\Http\Controllers\ParameterPriceController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,7 @@ Route::middleware('auth')->group(function () {
         return view('index');
     });
 
+    Route::get('/parameter-prices/download', [ParameterPriceController::class, 'downloadParameterPricesPdf'])->name('parameter-prices.download');
 
     Route::resource('standard', StandardController::class);
     Route::apiResource('parameter-prices', ParameterPriceController::class);
@@ -60,24 +62,25 @@ Route::middleware('auth')->group(function () {
     //
 
     Route::post('/standards/{code}/parameters/download', [StandardController::class, 'downloadParametersPdf'])->name('standard.parameters.download');
+    
 
     Route::get('/standard/create', [StandardController::class, 'create'])->name('standard.create');
     Route::post('/standard', [StandardController::class, 'store'])->name('standard.store');
 
     Route::get('standard/{standard}/edit', [StandardController::class, 'edit'])
-    ->name('standard.edit.multi');
+        ->name('standard.edit.multi');
 
     Route::put('standard/update', [StandardController::class, 'update'])
-    ->name('standard.update.multi');
+        ->name('standard.update.multi');
 
     Route::get('standard/{standard}/edit', [StandardController::class, 'edit'])->name('standard.edit');
     Route::put('standard/{standard}', [StandardController::class, 'update'])->name('standard.update');
 
     Route::delete('standard/{standard}/parameter/{parameter}', [StandardController::class, 'detachParameter'])
-    ->name('standard.detachParameter');
+        ->name('standard.detachParameter');
     // Allow deleting each individual standard (per lab type)
     Route::delete('standard/{standard}', [StandardController::class, 'destroy'])
-    ->name('standard.destroy');
+        ->name('standard.destroy');
 
 
     Route::delete('standards/{standard}', [StandardController::class, 'destroy'])->name('standard.destroy');
