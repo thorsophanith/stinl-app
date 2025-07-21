@@ -93,25 +93,26 @@ class ParameterPriceController extends Controller
     // --- WEB METHODS ---
 
     public function indexWeb(Request $request)
-    {
-        $search = $request->input('search');
-        $perPage = $request->input('per_page', 10);
+{
+    $search = $request->input('search');
+    $perPage = $request->input('per_page', 10);
 
-        $query = ParameterPrice::query()
-            ->leftJoin('parameters', 'parameter_prices.parameter_id', '=', 'parameters.id')
-            ->select('parameter_prices.*', 'parameters.name_en') // include both
-            ->when($search, function ($q) use ($search) {
-                $q->where(function ($q) use ($search) {
-                    $q->where('parameter_prices.code', 'like', "%{$search}%")
-                      ->orWhere('parameter_prices.lab_type', 'like', "%{$search}%")
-                      ->orWhere('parameters.name_en', 'like', "%{$search}%");
-                });
+    $query = ParameterPrice::query()
+        ->select('parameter_prices.*')
+        ->when($search, function ($q) use ($search) {
+            $q->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                  ->orWhere('lab_type', 'like', "%{$search}%")
+                  ->orWhere('name_en', 'like', "%{$search}%")
+                  ->orWhere('name_kh', 'like', "%{$search}%");
             });
+        });
 
-        $prices = $query->paginate($perPage)->appends($request->except('page'));
+    $prices = $query->paginate($perPage)->appends($request->except('page'));
 
-        return view('parameter_prices.index', compact('prices'));
-    }
+    return view('parameter_prices.index', compact('prices'));
+}
+
 
     public function create()
     {

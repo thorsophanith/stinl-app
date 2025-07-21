@@ -14,6 +14,8 @@ class ParameterPrice extends Model
     protected $fillable = [
         'code',
         'parameter',
+        'name_en',
+        'name_kh',
         'test_duration',
         'price',
         'lab_type',
