@@ -125,8 +125,8 @@ public function downloadParameterPricesPdf()
 {
     // Get parameter prices for the 3 lab types
     $parameterPrices = ParameterPrice::whereIn('lab_type', [
-        'Microbilogical Test for Water and Ice',
-        'Microbilogical Test for food and Beverage', 
+        'Microbiological Test for Water and Ice',
+        'Microbiological Test for food and Beverage', 
         'Physic-Chemical Test'
     ])->get();
 
