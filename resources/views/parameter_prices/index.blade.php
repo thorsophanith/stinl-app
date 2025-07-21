@@ -138,6 +138,9 @@
         <div class="mt-6 animate-fade-in">
             {{ $prices->appends(request()->query())->links() }}
         </div>
+        <a href="{{ route('parameter-prices.download') }}" class="btn btn-primary">
+            <i class="fas fa-download"></i> Download PDF
+            </a>
     </div>
 
     <div id="deleteDialog"
@@ -156,10 +159,6 @@
             </div>
         </div>
     </div>
-
-    <a href="{{ route('parameter-prices.download') }}" class="btn btn-primary">
-    <i class="fas fa-download"></i> Download PDF
-</a>
 
 
     @if ($errors->any())

@@ -12,7 +12,7 @@ class ParameterPriceController extends Controller
 {
     // --- API METHODS ---
 
-    public function index()
+    public function index(Request $request)
     {
         return response()->json(ParameterPrice::with('parameter')->get());
     }
@@ -93,19 +93,25 @@ class ParameterPriceController extends Controller
     // --- WEB METHODS ---
 
     public function indexWeb(Request $request)
-    {
-        $query = ParameterPrice::with('parameter');
+{
+    $search = $request->input('search');
+    $perPage = $request->input('per_page', 10);
 
-        if ($search = $request->input('search')) {
-            $query->where('code', 'like', "%{$search}%")
-                ->orWhereHas('parameter', fn($q) => $q->where('name_en', 'like', "%{$search}%"));
-        }
+    $query = ParameterPrice::query()
+        ->select('parameter_prices.*')
+        ->when($search, function ($q) use ($search) {
+            $q->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                  ->orWhere('lab_type', 'like', "%{$search}%")
+                  ->orWhere('name_en', 'like', "%{$search}%")
+                  ->orWhere('name_kh', 'like', "%{$search}%");
+            });
+        });
 
-        $perPage = $request->input('per_page', 10);
-        $prices = $query->paginate($perPage)->appends($request->except('page'));
+    $prices = $query->paginate($perPage)->appends($request->except('page'));
 
-        return view('parameter_prices.index', compact('prices'));
-    }
+    return view('parameter_prices.index', compact('prices'));
+}
 
 
     public function create()
