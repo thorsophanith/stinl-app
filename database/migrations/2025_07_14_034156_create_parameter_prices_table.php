@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique()->nullable(); // Unique company price code
             $table->string('parameter')->nullable();      // Name of the parameter
+            $table->string('name_en')->nullable();          // Unit of measurement (e.g., mg/dL, IU/L)
+            $table->string('name_kh')->nullable();      // Type of test (e.g
             $table->string('test_duration')->nullable();
             $table->float('price', 8, 2)->nullable();      // Floating price (e.g., 999999.99)
             $table->string('lab_type')->nullable();       // Type of lab

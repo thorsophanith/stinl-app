@@ -127,15 +127,15 @@
     </div>
 
     @php
-        $labTypes = [
-            'Microbilogical Test for Water and Ice',
-            'Microbilogical Test for food and Beverage',
-            'Physic-Chemical Test'
-        ];
-        
-        $groupedPrices = $parameterPrices->groupBy('lab_type');
+    $labTypes = [
+        'Microbiological Test for Water and Ice',
+        'Microbiological Test for food and Beverage',
+        'Physic-Chemical Test'
+    ];
 
-        function convertKhmerDurationToEnglish($khmerDuration) {
+    $groupedPrices = $parameterPrices->groupBy('lab_type');
+
+    function convertKhmerDurationToEnglish($khmerDuration) {
         $khmerToEnglishDigits = [
             '០' => '0', '១' => '1', '២' => '2', '៣' => '3', '៤' => '4',
             '៥' => '5', '៦' => '6', '៧' => '7', '៨' => '8', '៩' => '9',
@@ -149,32 +149,8 @@
 
         return trim($english);
     }
+@endphp
 
-    function extractEnglishOnly($text) {
-    // 1. Remove Khmer characters
-    $englishOnly = preg_replace('/[\x{1780}-\x{17FF}]+/u', '', $text);
-
-    // 2. Remove all brackets
-    $englishOnly = str_replace(['(', ')', '[', ']'], '', $englishOnly);
-
-    // 3. Remove unwanted leading/trailing punctuation
-    $englishOnly = trim($englishOnly);
-    $englishOnly = preg_replace('/^[\s\-\:\,\.\)]+|[\s\-\:\,\.\)]+$/', '', $englishOnly);
-
-    // 4. Replace multiple spaces with single space
-    $englishOnly = preg_replace('/\s+/', ' ', $englishOnly);
-
-    // 5. Convert chemical formulas or attached numbers to subscript
-    // Match patterns like N2, Fe2O3, O2, H2O, etc.
-    $englishOnly = preg_replace_callback('/\b([A-Za-z]+)(\d{1,3})\b/', function ($matches) {
-        return $matches[1] . '<sub>' . $matches[2] . '</sub>';
-    }, $englishOnly);
-
-    return $englishOnly;
-}
-
-
-    @endphp
 
     @foreach($labTypes as $index => $labType)
         @if($index > 0)
@@ -203,12 +179,9 @@
                             <tr>
                                 <td><strong>{{ $price->code ?? 'N/A' }}</strong></td>
                                 <td>
-    @if($price->parameter)
-        {!! extractEnglishOnly($price->parameter) !!}
-    @else
-        N/A
-    @endif
+    {{ $price->name_en ?? 'N/A' }}
 </td>
+
 
                                 <td class="duration-cell">
     @if($price->test_duration)
