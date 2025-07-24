@@ -88,7 +88,7 @@
             </div>
             <form method="POST" action="{{ route('standard.parameters.download', ['code' => $standard->code]) }}">
                 @csrf
-                <button type="submit" class="btn btn-sm btn-blue">Download PDF</button>
+                <button type="submit" class="btn px-4 py-1.5 bg-blue-500 hover:bg-blue-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">Download PDF</button>
             </form>
         </div>
 

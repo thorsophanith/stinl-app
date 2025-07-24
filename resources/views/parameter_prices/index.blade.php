@@ -138,7 +138,7 @@
         <div class="mt-6 animate-fade-in">
             {{ $prices->appends(request()->query())->links() }}
         </div>
-        <a href="{{ route('parameter-prices.download') }}" class="btn btn-primary">
+        <a href="{{ route('parameter-prices.download') }}" class="btn btn-primary px-4 py-1.5 bg-blue-500 hover:bg-blue-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 text-xs md:text-sm font-medium">
             <i class="fas fa-download"></i> Download PDF
             </a>
     </div>
