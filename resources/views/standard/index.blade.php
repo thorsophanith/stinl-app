@@ -105,10 +105,23 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse ($standards as $standard)
                     <tr class="cursor-pointer hover:bg-blue-50 ease-out duration-300 transition animate-fade-in">
-                        <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->code ?? '--' }}</td>
-                        <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="w-[300px] px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->name_kh }} ({{ $standard->name_en ?? '--' }})</td>
-                        <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->cs ?? '--' }}</td>
-                        <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $standard->codex ?? '--' }}</td>
+                        <td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+    {{ empty($standard->code) || $standard->code === 'null' ? '-' : $standard->code }}
+</td>
+
+<td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="w-[300px] px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+    {{ empty($standard->name_kh) || $standard->name_kh === 'null' ? '-' : $standard->name_kh }}
+    ({{ empty($standard->name_en) || $standard->name_en === 'null' ? '--' : $standard->name_en }})
+</td>
+
+<td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+    {{ empty($standard->cs) || $standard->cs === 'null' ? '-' : $standard->cs }}
+</td>
+
+<td onclick="window.location='{{ route('standard.show', $standard->id) }}'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+    {{ empty($standard->codex) || $standard->codex === 'null' ? '-' : $standard->codex }}
+</td>
+
                         <td class="py-2 text-gray-700 flex gap-2 justify-center items-center text-sm lg:w-[90px]">
                             <a href="{{ route('standard.edit', $standard->id) }}" class="px-4 py-1 bg-blue-500 hover:bg-blue-600 ease-in text-white rounded-md duration-300 ring-2 mb-1 font-medium">Edit</a>
                             <a class="px-4 py-1 bg-red-500 hover:bg-red-600 ease-in text-white rounded-md duration-300 ring-2 ring-red-300 mb-1 font-medium">
