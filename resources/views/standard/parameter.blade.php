@@ -53,24 +53,31 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {!! $parameter->name_kh !!} ({!! $parameter->name_en ? formatChemicalFormula($parameter->name_en) : '' !!})
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $parameter->method ?? ''}}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $parameter->criteria_operator }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ empty($parameter->method) || $parameter->method === 'null' ? '-' : $parameter->method}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ empty($parameter->criteria_operator) || $parameter->criteria_operator === 'null' ? '-' : $parameter->criteria_operator }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        @php
-                                            $criteriaValues = [];
-                                            for ($i = 1; $i <= 5; $i++) {
-                                                $value = $parameter->{'criteria_value'.$i} ?? null;
-                                                if (!empty($value)) {
-                                                    $criteriaValues[] = $value;
-                                                }
-                                            }
-                                            echo count($criteriaValues) > 1
-                                                ? implode(' - ', $criteriaValues)
-                                                : $criteriaValues[0] ?? '';
-                                        @endphp
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $parameter->LOQ ?? '' }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $parameter->unit }}</td>
+    @php
+        $v1 = trim($parameter->criteria_value1);
+        $v2 = trim($parameter->criteria_value2);
+
+        // Treat empty strings or string 'null' as null, but keep 0
+        $v1 = ($v1 === '' || strtolower($v1) === 'null') ? null : $v1;
+        $v2 = ($v2 === '' || strtolower($v2) === 'null') ? null : $v2;
+
+        if (!is_null($v1) && !is_null($v2)) {
+            echo $v1 . ' - ' . $v2;
+        } elseif (!is_null($v1)) {
+            echo $v1;
+        } elseif (!is_null($v2)) {
+            echo $v2;
+        } else {
+            echo '-';
+        }
+    @endphp
+</td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ empty($parameter->LOQ) || $parameter->LOQ === 'null' ? '-' : $parameter->LOQ }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ empty($parameter->unit) || $parameter->unit === 'null' ? '-' : $parameter->unit }}</td>
                                 </tr>
                             @endforeach
                         @endforeach
